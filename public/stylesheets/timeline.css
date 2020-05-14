@@ -1,0 +1,116 @@
+/* axis */
+
+#timeline .axis { /* axis labels */
+    fill: black;
+    font-family: Arial;
+    font-size: 5px;
+}
+
+#timeline .axis line{ /* axis tick marks */
+    stroke-width : 1;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+#timeline .axis path { /* axis line */
+    stroke-width : 1;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+/* timeline band */
+
+#timeline .band { /* band background */
+    fill: white;
+}
+
+/* labels */
+
+#timeline .bandLabel {
+    fill: #F0F0F0;
+    font: 7px sans-serif;
+    font-weight: bold;
+}
+
+#timeline .bandMinMaxLabel {
+    fill: blue;
+    font: 5px sans-serif;
+    font-weight: bold;
+}
+
+#timeline .bandMidLabel {
+    fill: red;
+    font: 5px sans-serif;
+    font-style: italic;
+    font-weight: bold;
+}
+
+/* brush */
+
+#timeline brush .extent {
+    stroke: gray;
+    fill: blue;
+    fill-opacity: .1;
+}
+
+#timeline .chart {
+    fill: #EEEEEE;
+}
+
+#timeline .interval {
+    fill: #62c462;
+    stroke-width: 3;
+    cursor : default;
+    pointer-events: true;
+}
+
+#timeline .instant {
+    fill: rgb(70, 130, 180);
+    stroke-width: 3;
+    cursor : default;
+    /*pointer-events: true;*/
+}
+
+#timeline .instantLabel {
+    fill : black;
+    font: 9px sans-serif;
+    shape-rendering: crispEdges;
+}
+
+#timeline .intervalLabel {
+    fill : white;
+    font: 9px sans-serif;
+    font-color:white;
+    shape-rendering: crispEdges;
+}
+
+#timeline .item {
+    cursor : default;
+    pointer-events: auto;
+    
+}
+
+#timeline .svg {
+    
+    background-color: none;
+}
+
+.timeLinetooltip {
+    width: auto;
+    z-index: 10000;
+    position: absolute;
+    visibility: hidden;
+    color : black;
+    cursor:default;
+    background-color: #FFFFEE;
+    border: 1px solid;
+    padding: 4px;
+    shape-rendering: crispEdges;
+    pointer-events: none;
+}
+.forceInstance{
+	fill: rgb(70, 130, 180);
+    stroke-width: 3;
+    cursor : default;
+}
+

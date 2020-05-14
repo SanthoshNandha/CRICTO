@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: buildDocView.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: buildDocView.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+	*Author: Santhosh Nandhakumar
+	*emailid: nsanthosh2409@gmail.com
+*/
+
+
+/**
+ * This function get the documents and their enties and populate the docs in the doc view.
+ * Used to populate docs in doc view and bookmarked column
+ * @param {array} data - Array of document objects
+ * @param {String} divName - The id of the div in which docs are need to be populated
+ * @param {boolean} isPrimary - 
+ * @param {boolean} isScrap - 
+ * @param {boolean} isAnalyst - 
+ * @param {boolean} isBookMark - 
+ */
+
+function buildDocView(data, divName, isPrimary,isScrap,isAnalyst,isBookMark){
+	
+	// Check if build request from bookmark section
+	if(!isBookMark){
+		$("#"+divName).empty();
+	}
+		
+	if(!(isPrimary) &amp;&amp; !(isScrap) &amp;&amp; !(isAnalyst) &amp;&amp; !(isBookMark)){
+		if(data.length == 1 || data == null|| data == undefined){
+			$("#"+divName).html("&lt;hr>&lt;h5>There are no related document found !!! &lt;br> Click NEXT to get a new document &lt;/h5>");
+			return false;
+		}
+	} 
+		
+	$.each(data, function() {
+
+		Dat  = []; 
+		Money = '';
+		Misc = '';
+		Person = '';
+		Organization = '';
+		Location = '';
+		Phone = '';
+            
+		if (this.Organization != undefined) {
+			Organization += this.Organization;
+		}
+		if (this.Location != undefined) {
+			Location += this.Location;
+		}
+		if (this.Person != undefined) {
+			Person += this.Person;
+		}
+		if (this.Money != undefined) {
+			Money += this.Money+' ';
+		}
+		if (this.Misc != undefined) {
+			Misc += this.Misc;
+		}
+		if (this.Phone != undefined) {
+			Phone += this.Phone;
+		}
+		if (this.Date != undefined) {
+			if((this.Date).constructor === Array){
+				var d = this.Date;
+				$.each(d , function(){
+					Dat.push(this);
+				})
+			}
+			else{
+				Dat.push(this.Date);
+			}
+		}
+			
+		var newdiv = document.createElement('div');
+		newdiv.id = '' + this.docID + '';
+		newdiv.className = '' + "docs-div" + '';
+            
+		if(isPrimary){
+			primaryDocID = newdiv.id;
+			newdiv.innerHTML = "&lt;span style=\"float:right\">&lt;button id = 'getRelatedDocsButton'class = 'btn btn-default btn-xs relatedDocsButton'> Get Related Documents &lt;/button>&lt;/span>&lt;b> " + this.docID + " :&lt;/b> " + this.docText + " &lt;br>";
+		}
+		else if(isScrap){
+			for (var i = 0 ; i &lt; this.keywords.length ; i++) {
+				var keyword = this.keywords[i];
+				var newdiv = document.createElement('div');
+				newdiv.id = '' + this.keywords[i].entity + i;
+				newdiv.className = "pull-left";                    
+				newdiv.innerHTML = "&lt;span class='btn btn-default btn-xs scrap-keyword-delete'>&lt;i class='icon-remove'>&lt;/i>&lt;/span>&lt;span>" + keyword.entity + "&lt;/span> ";
+				document.getElementById(divName).appendChild(newdiv);
+				nonEntityHiglight('' + this.keywords[i].entity + i,false);
+			}
+				
+			//newdiv.innerHTML = "&lt;span style=\"float:right\">&lt;button id = 'scrapBoxClear' class = 'btn btn-default btn-xs scrap-clear'>&lt;i class='icon-remove'>&lt;/i>&lt;/button>&lt;/span>" + this.keywords[i] + " &lt;br>";
+		}
+		else if(isAnalyst){
+			newdiv.innerHTML = "&lt;span style=\"float:right\">&lt;span id = 'getDocLinks' class = 'get-doc-graphs'> &lt;i class='icon-chevron-right'>&lt;/i> &lt;/span>&lt;/span>" + 
+					"&lt;span>&lt;span class = 'bookmarkButton btn btn-default btn-xs'>&lt;i class='icon-bookmark'>&lt;/i>&lt;/button>&lt;/span>" +
+					"&lt;para> &lt;b> " + this.docID + ":&lt;/b> " + this.docText + " &lt;br>";
+		}
+		else if(isBookMark){
+			newdiv.innerHTML = "&lt;span style=\"float:right\">&lt;span class = 'bookmarkClearButton'> &lt;i class='icon-remove'>&lt;/i> &lt;/span>&lt;/span>" + "&lt;para> &lt;b> " + this.docID + " : &lt;/b>  " + this.docText + " &lt;br>";
+			newdiv.setAttribute("original-div-id",this.docID );
+			this.docID = this.docID + "_bookmarked";
+			newdiv.id = '' + this.docID + '';
+			
+		}
+		else{
+				newdiv.innerHTML = "&lt;span style=\"float:right\">&lt;/span>&lt;hr>&lt;b> " + this.docID + " &lt;/b>&lt;br> " + this.docText + " &lt;br>";
+		}
+            
+		if(!(isPrimary)){
+			if(newdiv.id === primaryDocID){
+				return false;
+			}
+		} 
+            	
+        document.getElementById(divName).appendChild(newdiv);
+		if(isAnalyst){
+			if($.inArray( this.docID, bookMarkDocs ) != -1){
+				$("#"+this.docID+" .bookmarkButton").children(".fa-bookmark").addClass("bookmarked-doc");
+			} 
+		}
+            	
+        nonEntityHiglight('' + this.docID + '',false);
+            	
+		if(isScrap){
+			$(".scrap-keyword-delete").click(function(){
+				$(this).parent().remove();
+			});
+			
+		}
+            	
+		var Loc = Location.split(',');
+		var Per = Person.split(',');
+		var Org = Organization.split(',');
+		var Mon = Money.split(' ');
+		var Mis = Misc.split(',');
+		var Pho = Phone.split(",");
+		var id = this.docID;
+    			
+		//Code to highllight entities and jQuery function to highlight(Same code repreated for different entities)
+		for (var i = 0; i &lt; Per.length; i++) {
+			$('#' + this.docID + "").highlight(Per[i], {className: 'Person Person_'+this.docID+'_'+i+' drag' + ' ' + Per[i].split(" ").join("")});
+			var doc = this.docID;
+			$('.'+'Person_'+this.docID+'_'+i).click(function(e){
+				e.stopPropagation();
+				if (!$(this).hasClass('ent_highlighted')) {
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					if(elementPos == -1){
+						queue.push({
+							selection : $(this).text(),
+							classname : $(e.target).prop('class'),
+							docID : doc,
+							Type : "Person"
+						});
+						$(this).addClass('ent_highlighted');
+					}
+					
+					if(queue.length >= 3){
+						var temp = queue.shift();
+						var cls = temp.classname.split(" ");
+						if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+							$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+						}
+						else{
+						$('#'+temp.docID).unhighlight({className : cls[1]});
+						}			
+					}
+					
+				}
+				else {
+					//remove highlight
+					$(this).removeClass('ent_highlighted');
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					queue.splice(elementPos,1);
+				}
+			});
+		}
+    				
+		for (var i = 0; i &lt; Org.length; i++) {
+			$('#' + this.docID + '').highlight(Org[i], {className :'Organization Organization_'+this.docID+'_'+i+' drag'+ ' ' + Org[i].split(" ").join("")});
+			$('.'+'Organization_'+this.docID+'_'+i).click(function(e){
+				e.stopPropagation();
+				if (!$(this).hasClass('ent_highlighted')) {
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					if(elementPos == -1){
+						queue.push({
+							selection : $(this).text(),
+							classname : $(e.target).prop('class'),
+							docID : doc,
+							Type : "Organization"
+						});
+					$(this).addClass('ent_highlighted');
+					}
+					else{}
+					if(queue.length >= 3){
+						var temp = queue.shift();
+						var cls = temp.classname;
+						cls = cls.split(" ");
+						if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+							$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+						}
+						else{
+						$('#'+temp.docID).unhighlight({className : cls[1]});
+						}
+					}
+					
+				}
+				else {
+					//remove highlight
+					$(this).removeClass('ent_highlighted');
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					queue.splice(elementPos,1);
+				}
+			});
+		}
+    				
+		for (var i = 0; i &lt; Dat.length; i++) {
+			$('#' + this.docID + "").highlight(Dat[i], {className: 'Date Date_'+this.docID+'_'+i+' drag'+ ' ' + Dat[i].split(" ").join("")});
+			$('.'+'Date_'+this.docID+'_'+i).click(function(e){
+				e.stopPropagation();
+				if (!$(this).hasClass('ent_highlighted')) {
+					isEntityDate = true;
+					queue.push({
+						selection : $(this).text(),
+						classname : $(e.target).prop('class'),
+						docID : doc,
+						Type : "Date"
+					});
+					
+					if(queue.length >= 3){
+						isEntityDate = false;
+						var temp = queue.shift();
+						var cls = temp.classname.split(" ");
+						if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+							$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+						}
+						else{
+							$('#'+temp.docID).unhighlight({className : cls[1]});
+						}			
+					}
+					$(this).addClass('ent_highlighted');
+				}
+				else {
+					isEntityDate = false;
+					//remove highlight
+					$(this).removeClass('ent_highlighted');
+				}
+			});
+		}
+    				
+		for (var i = 0; i &lt; Pho.length; i++) {
+			$('#' + this.docID + "").highlight(Pho[i], {className: 'Phone Phone_'+this.docID+'_'+i+' drag'+ ' ' + Pho[i].split(" ").join("")});
+			var doc = this.docID;
+			$('.'+'Phone_'+this.docID+'_'+i).click(function(e){
+				e.stopPropagation();
+				if (!$(this).hasClass('ent_highlighted')) {
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					if(elementPos == -1){
+						queue.push({
+							selection : $(this).text(),
+							classname : $(e.target).prop('class'),
+							docID : doc,
+							Type : "Phone"
+						});
+						$(this).addClass('ent_highlighted');
+					}
+					else{}
+					if(queue.length >= 3){
+						var temp = queue.shift();
+						var cls = temp.classname.split(" ");
+						if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+							$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+						}
+						else{
+							$('#'+temp.docID).unhighlight({className : cls[1]});
+						}			
+					}
+						
+				}
+				else {
+					//remove highlight
+					$(this).removeClass('ent_highlighted');
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					queue.splice(elementPos,1);
+				}
+			});
+		}
+
+		for (var i = 0; i &lt; Loc.length; i++) {
+			$('#' + this.docID + '').highlight(Loc[i], {className :'Location Location_'+this.docID+'_'+i+' drag'+ ' ' + Loc[i].split(" ").join("")});
+			$('.'+'Location_'+this.docID+'_'+i).click(function(e){
+				e.stopPropagation();
+				if (!$(this).hasClass('ent_highlighted')) {
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					if(elementPos == -1){
+						queue.push({
+							selection : $(this).text(),
+							classname : $(e.target).prop('class'),
+							docID : doc,
+							Type : "Location"
+						});
+						$(this).addClass('ent_highlighted');
+					}
+					else{}
+					if(queue.length >= 3){
+						var temp = queue.shift();
+						var cls = temp.classname;
+						cls = cls.split(" ");
+						if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+							$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+						}
+						else{
+							$('#'+temp.docID).unhighlight({className : cls[1]});
+						}
+					}
+				}
+				else {
+					$(this).removeClass('ent_highlighted');
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					queue.splice(elementPos,1);
+				}
+			});
+		}
+
+		for(var i=0;i&lt;Mon.length;i++){
+		$('#'+this.docID+'').highlight(Mon[i], {className :'Money Money_'+this.docID+'_'+i+' drag'+ ' ' + Mon[i].split(" ").join("")});
+		$('.'+'Money_'+this.docID+'_'+i).click(function(e){
+			e.stopPropagation();
+				if (!$(this).hasClass('ent_highlighted')) {
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					if(elementPos == -1){
+						queue.push({
+							selection : $(this).text(),
+							classname : $(e.target).prop('class'),
+							docID : doc,
+							Type : "Money"
+						});
+						$(this).addClass('ent_highlighted');
+					}
+					else{}
+					if(queue.length >= 3){
+						var temp = queue.shift();
+						var cls = temp.classname;
+						cls = cls.split(" ");
+						if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+							$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+						}
+						else{
+						$('#'+temp.docID).unhighlight({className : cls[1]});
+						}
+					}
+				}
+				else {
+					$(this).removeClass('ent_highlighted');
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					queue.splice(elementPos,1);
+				}
+			});
+		}
+    				
+		for(var i=0;i&lt;Mis.length;i++){
+		$('#'+this.docID+'').highlight(Mis[i], {className :'Misc Misc_'+this.docID+'_'+i+' drag'+ ' ' + Mis[i].split(" ").join("")});
+		$('.'+'Misc_'+this.docID+'_'+i).click(function(e){
+			e.stopPropagation();
+				if (!$(this).hasClass('ent_highlighted')) {
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					if(elementPos == -1){
+						queue.push({
+							selection : $(this).text(),
+							classname : $(e.target).prop('class'),
+							docID : doc,
+							Type : "Misc"
+						});
+						$(this).addClass('ent_highlighted');
+					}
+					else{}
+					if(queue.length >= 3){
+						var temp = queue.shift();
+						var cls = temp.classname;
+						cls = cls.split(" ");
+						if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+							$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+						}
+						else{
+						$('#'+temp.docID).unhighlight({className : cls[1]});
+						}
+					}
+				}
+				else {
+					$(this).removeClass('ent_highlighted');
+					var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+					queue.splice(elementPos,1);
+				}
+			});
+		}
+    				
+		if(isPrimary){
+			buildfrequencyView();
+		}
+            
+		$(function() {
+			$( ".drag" ).draggable({
+				addClasses: false,
+				// revert: true, 
+				helper: "clone"
+			});
+		});
+	});
+
+	if(isAnalyst){
+		buildGetDocLinks();
+		buildBookmarkView();
+		
+	}
+
+	if(isBookMark){
+			$(".bookmarkClearButton").click(function(e){
+				e.stopPropagation();
+				var parentId = $(this).parent().parent().attr("original-div-id")
+				//$("#"+$(this).parent().parent().attr("original-div-id")+ " span .bookmarkButton").show();
+				$("#"+$(this).parent().parent().attr("original-div-id")+ " span .bookmarkButton").children(".fa-bookmark").removeClass("bookmarked-doc");
+				$(this).parent().parent().remove();
+				bookMarkDocs = $.grep(bookMarkDocs, function(value) {
+					return value != parentId;
+					});
+
+				if($("#searchResult").children().length == 0){            		
+					$("#userList").removeClass("analyst-document-view-small");
+					$("#userList").addClass("analyst-document-view-normal");                	
+					$("#searchResult").removeClass("searchResult-normal-show");
+					$("#searchResult").addClass("searchResult-normal-hide");
+					$("#userList").find(".bookmarkButton").each(function(index){
+						//$(this).show();
+						$(this).children(".fa-bookmark").removeClass("bookmarked-doc");
+					});
+				}
+			});
+			nonEntityHiglight("searchResult",true);
+	}
+}
+
+function nonEntityHiglight(divName,isBookmark){
+	$("#"+divName).click(function(e) {
+		e.stopPropagation();
+        try {
+            s = window.getSelection();
+            var range = s.getRangeAt(0);
+            var node = s.anchorNode;
+            while (range.toString().indexOf(' ') != 0 &amp;&amp; range.toString().indexOf('[') != 0) {
+                range.setStart(node, (range.startOffset - 1));
+            }
+            range.setStart(node, range.startOffset + 1);
+            do {
+                if (range.toString().indexOf(',') != -1) {
+                    range.setEnd(node, range.endOffset - 1);
+                    break;
+                }
+                if (range.toString().indexOf(':') != -1) {
+                    range.setEnd(node, range.endOffset - 1);
+                    break;
+                }
+                if (range.toString().indexOf("'") != -1) {
+                    range.setEnd(node, range.endOffset - 1);
+                    break;
+                }
+                if (range.toString().indexOf('.') != -1) {
+                    range.setEnd(node, range.endOffset - 1);
+                    break;
+                }
+                if (range.toString().indexOf(';') != -1) {
+                    range.setEnd(node, range.endOffset - 1);
+                    break;
+                }
+                if (range.toString().indexOf(']') != -1) {
+                    range.setEnd(node, range.endOffset - 1);
+                    break;
+                }
+                if (range.toString().indexOf('/') != -1) {
+                    range.setEnd(node, range.endOffset - 1);
+                    break;
+                }
+                if (range.toString().indexOf(' ') != -1) {
+                    range.setEnd(node, range.endOffset - 2);
+                    break;
+                }
+                range.setEnd(node, range.endOffset + 1);
+            } while (range.toString().indexOf(' ') == -1 &amp;&amp; range.toString().trim() != '');
+            var str = range.toString().trim();
+            str = str.replace(/\b[-.,()&amp;#!\[\]{}"']+\B|\B[-.,()&amp;#!\[\]{}"']+\b/g, '');
+            
+            var clicked = e.target;
+            var currentID = clicked.id || (clicked.parentElement.id) || (clicked.parentElement.parentElement.id) ;
+            
+            
+            /*if(currentID == ""){
+            	currentID = "searchResult";
+            }*/
+    		if(stop_words.indexOf(str) !== -1){
+    			alert("stop word");
+    		}
+    		else{
+    		
+    		$("#"+divName).highlight(str, {className:'highlighted '+str});
+    		
+    		var elementPos = queue.map(function(x) {return x.selection; }).indexOf(str);
+    		
+    		if(elementPos == -1){
+    		queue.push({
+    			selection : str,
+    			classname : 'highlighted '+str,
+    			docID : currentID,
+    			Type : "nonEntity"
+    				});
+    		}
+    		
+    		if(queue.length >= 3){
+    			var temp = queue.shift();
+    			var cls = temp.classname;
+    			cls = cls.split(" ");
+    			if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
+						$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
+					
+    			}
+    			else{
+    				$('#'+temp.docID).unhighlight({className : cls[1]});
+    			}
+    			}
+    		}
+    		
+            $('.highlighted').click(function(e) {
+            	e.stopPropagation();
+    			var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
+    			queue.splice(elementPos,1);
+    			$("#"+divName).unhighlight({className:$(this).text().split(" ")[0]});
+            });
+        } 
+        catch (e) {
+        }
+    });
+}
+function buildfrequencyView(){
+	
+	$("#getRelatedDocsButton").click(function(e){
+		e.stopPropagation();
+		document.getElementById('WorkerInstructions').innerHTML = '&lt;b>Instruction: &lt;/b>The documents related to the links created are displayed below. Please create links from these documents by selecting two terms from them.&lt;br>Click \'Next\' button to proceed to the next primary document.'
+		$.ajax({
+			type: 'post',
+			dataType: 'application/x-www-form-url',
+			data: {
+					"wordList" : selectionWords
+			},
+			url: '/users/getfrequentDocs',
+			complete : function(data){
+				if(data == null || data.responseText == null || data.responseText == "" || data.responseText == []  ){
+					$("#frequentList").html("&lt;hr>&lt;h5>There are no related document found !!! &lt;br> Click NEXT to get a new document &lt;/h5>");
+				}
+				else{
+					buildDocView(JSON.parse(data.responseText),'frequentList',false,false,false);
+				}
+				
+            }
+			
+		});
+	});
+	
+	$("#getRelatedDocsButton").hide();
+}
+
+function buildBookmarkView(){
+	$(".bookmarkButton").click(function(e){
+		if(!($(this).children(".fa-bookmark").hasClass("bookmarked-doc"))){
+			e.stopPropagation();
+			$("#userList").removeClass("analyst-document-view-normal");
+	        $("#userList").addClass("analyst-document-view-small");
+	        $("#searchResult").removeClass("searchResult-normal-hide");
+	        $("#searchResult").addClass("searchResult-normal-show");
+	        var docId =  $(this).parent().parent().attr("id");
+	        generateBookMarkDocs(docId,"searchResult");
+	        bookMarkDocs.push(docId);
+	       // $(this).hide();
+	        $(this).children(".fa-bookmark").addClass("bookmarked-doc");
+		}
+		
+	});
+}
+function buildGetDocLinks(){
+	$(".get-doc-graphs").click(function(){
+		var docId = $(this).parent().parent().attr("id");
+		visualizedDocId.push(docId);
+		getLinks(false);
+		//getDocLinks(visualizedDocId);
+	});
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#buildDocView">buildDocView</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed May 13 2020 16:31:13 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
