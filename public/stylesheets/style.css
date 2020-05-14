@@ -1,8 +1,210 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+/* 
+	Author: Santhosh Nandhakumar
+    email id: nsanthosh2409@gmail.com
+*/
+
+/**** Styles for login page starts ****/
+#loginDiv{
+    width: 350px;
+}
+#loginDiv *{
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+/**** Styles for login page Ends ****/
+
+
+.Location{
+	border-bottom: 1px dashed gray
+}
+.Person{
+	border-bottom: 1px dashed gray
+}
+.Organization{
+	border-bottom: 1px dashed gray
+}
+.Money{
+	border-bottom: 1px dashed gray
+}
+.Misc{
+	border-bottom: 1px dashed gray
 }
 
-a {
-  color: #00B7FF;
+.Phone{
+	border-bottom: 1px dashed gray
+}
+.Date{
+	border-bottom: 1px dashed gray
+}
+
+.ent_highlighted {
+    cursor: pointer;
+	z-index: 2000;
+}
+
+.scarp-keyword{
+   border-radius: 5px;
+   margin-right: 5px;
+}
+.scarp-keyword-remove{
+   background-color: #fffeff;
+   border: 0px solid #c6c6c6;
+   border-radius: 2px;
+   margin-right: 1px;
+}
+
+.location.ent_highlighted {
+   background-color: #99CCFF;
+   border: 1px solid #c6c6c6;
+   border-radius: 5px;
+}
+.person.ent_highlighted {
+    background-color: #FFCC00;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px;
+}
+.date.ent_highlighted {
+    background-color: #CCFF00;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px;
+}
+.organization.ent_highlighted {
+    background-color: #FFCCFF;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px;
+}
+.phone.ent_highlighted {
+    background-color: yellow;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px;
+}
+.misc.ent_highlighted {
+    background-color: #66FFFF;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px
+}
+.money.ent_highlighted {
+    background-color: #CCFFCC;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px
+}
+.highlighted {
+    background-color: #C69633;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px;
+    z-index: 2000;
+}
+
+.ui-dialog-osx {
+    -moz-border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px; border-width: 0 8px 8px 8px;
+}
+
+
+.un-highlight
+        {
+            background-color: #FFFFFF;
+        }
+
+.ui-datepicker table {
+    width: 100%;
+}
+
+.ui-datepicker a {
+    text-decoration: none;
+}
+.ui-datepicker {
+	background : #FAFAFA;
+    width: 400px;
+    height: auto;/*
+    margin: 5px auto 0;
+    font: 9pt Arial, sans-serif;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, .5);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, .5);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, .5);*/
+}
+
+.ui-datepicker-title {
+    text-align: center;
+}
+
+.ui-datepicker-prev {
+    float: left;
+    background-position: center -30px;
+}
+.ui-datepicker-next {
+    float: right;
+    background-position: center 0px;
+}
+
+fieldset {
+	border:0;
+	padding:0; margin:0;
+}
+    
+div.tooltip {	
+    position: absolute;			
+    text-align: left;			
+    width: 100px;					
+    height: 50px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+} 
+.map-tooltip {	
+    position: absolute;			
+    text-align: left;			
+    width: 150px;					
+    height: 50px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+input.lableText
+{
+   border-style:none;
+   border-color:#FFFFFF;
+   box-shadow:none;
+}
+input.lableText:hover
+{
+   border-style:solid;
+   border-color:#000000;
+   box-shadow:none;
+}
+input.lableText:focus
+{
+   border-style:solid;
+   border-color:#000000;
+   box-shadow:none;
+}
+input.dateText
+{
+   border-style:none;
+   border-color:#FFFFFF;
+   box-shadow:none;
+}
+input.dateText:hover
+{
+   border-style:solid;
+   border-color:#000000;
+   box-shadow:none;
+}
+input.dateText:focus
+{
+   border-style:solid;
+   border-color:#000000;
+   box-shadow:none;
+}
+.select-line{
+    stroke: black;
+    stroke-width: 2;
 }

@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+// Route to the login page of worker
+router.get('/', function(req, res) {
+	res.render('mainView', { title: 'CRICTO' });
+});
+
+router.get('/intstruction', function(req, res) {
+	res.render('workerInstructions', { title: 'Instructions' });
 });
 
 module.exports = router;

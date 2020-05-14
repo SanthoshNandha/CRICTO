@@ -1,0 +1,480 @@
+<!-- 
+	Author: Santhosh Nandhakumar
+	email id: nsanthosh2409@gmail.com
+-->
+<html>
+    <head>
+        <title>CRICTO</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+	    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"/>
+	    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+	    <link rel="stylesheet" href="/stylesheets/d3-context-menu.css" />
+	    <link rel="stylesheet" href="/stylesheets/jquery-ui.css"/>
+	    <link rel="stylesheet" href="/stylesheets/multiple-select.css"/>
+	    <link rel="stylesheet" href="/stylesheets/newIndexStyle.css"/>
+	    <link rel="stylesheet" href="/stylesheets/style.css"/>
+	    <link rel="stylesheet" href="/stylesheets/analystViewStyles.css"/>
+	    <link rel="stylesheet" href="/stylesheets/font-awesome-4.6.3/css/font-awesome.min.css">
+	    <link rel="stylesheet" media="screen" href="/stylesheets/timeline.css">
+	    <link rel="stylesheet" href="/stylesheets/slickGrid/slick.grid.css" type="text/css"/>
+    </head>
+    
+    <body>
+		<!-- Start of link details dialog block -->
+    	<div id="dialog-form" title="Enter Details">
+    		<div class="alert alert-info alert-without-margin instruction-alert">
+				Enter a description for the link selected <br> 
+				Then enter a start date (and a end date if applicable) for the link.
+			</div>
+			<br>
+			<!-- Start of Link details form -->
+		  	<form>
+		    	<fieldset>
+					<label for="description">Describe the Relation* :</label>
+					<input id="description" type="text" name="description" class="text ui-widget-content ui-corner-all"/>
+					<br>
+					<label>Date of the Relation*  :</label>
+					<input id="useDocDate" type="checkbox" name="useDocDate" style="margin-top:0px;"/> Use Document Date <i>(if not sure of dates)</i> 
+					<br>					
+					<input id="isInteraval" type="checkbox" name="isInteraval" style="margin-top:0px;" /> <span id="intervalText">It is an Interval <i>(if it has an End Date)</i> </span><br><br>
+					<label for="startDate" id="startDateLabel">Start Date* :</label>
+					<input id="startDate" type="text" name="startDate" class="text ui-widget-content ui-corner-all"/>
+					<label id="endDatelable" for="endDate">End Date :</label>
+					<input id="endDate" type="text" name="endDate" class="text ui-widget-content ui-corner-all"/>
+		    	</fieldset>
+			  </form>
+			  <!-- End of Link details form -->
+		</div>
+		<!-- End of link details dialog block -->
+
+		<!-- Start of entitySelect for line type -->
+		<div id="entitySelect" title="Select one">
+			<div class="alert alert-info alert-without-margin instruction-alert">
+    			<b>Instructions:</b> *Select the keyword
+    		</div>
+    		<br>
+			<form>
+		    	<fieldset>
+		    		<select id="singleEntitySlect" size="10"></select>
+		    	</fieldset>
+		  	</form>
+		</div>
+		<!-- End of entitySelect for line type -->
+
+		<!-- Start of the main screen container -->
+		<div class="container container-1080" id="analyst-root">
+
+			<!-- Start of Login section -->
+			<div id="loginDiv" class="analyst-login-div-show">
+				<img src="/img/CrictoLogo.png" class="loginContent">
+				<br><br><br><br>
+				<input type="text" id="analystUserID" placeholder="Enter your Id"> <br>
+				<button id="analystproceedButton"> Continue </button>			
+			</div>
+			<!-- End of Login section -->
+
+		<div id="analystMainPage" class="analys-main-page-hide">
+			<div class="analyst-left-side pull-left">
+				<div class="analyst-half-container">  
+					<div id="toolNameDiv" class="tool-name pull-left"></div>      
+					<div id="histogram" class="histogram-place pull-right">
+					</div>
+				</div>       
+				<div class="analyst-upper">
+					<h3 class="mini-header">Primary Document
+					</h3>
+					<div id="upperRight" class="analyst-upper-right pull-right">
+						<div class="">
+							<div class="document-list">
+								<div id="userList" class="pull-left analyst-document-view-normal scrollable" style="height:98%;">                     
+								</div>
+								<!-- 
+								<div id="searchResult" class="pull-right searchResult-normal-hide scrollable">                                
+								</div> -->
+								<!-- <div id="bookmarkDiv" class="bookmark-div-normal">                                
+								</div>  -->
+							</div>
+						</div>
+					</div>
+					<div class="analyst-generate-button-bar">
+						<button id="do" type="button" class="btn btn-default btn-xs generate-bar-button">
+							Generate
+						</button>
+						<button id="selectReset" type="button" class="btn btn-default btn-xs generate-bar-button">
+							Reset
+						</button>
+					</div>
+					<div class="analyst-scrap-paper-box">
+						<div class="mini-header">
+							Scratch Pad - <i>Make notes of important terms</i>				        		
+						</div>
+						<div id="scrapPaperDiv" class="analyst-scrap-paper-place scrollable">
+						</div>
+						<div id="analystscrapPaperTools" class="analyst-scrap-paper-tools pull-right">
+							<table id="analystscrapPaperToolsTable">
+								<tr>
+									<td style="text-align: right;"><p style="margin-bottom:10px;font-size: 10px;"><b>Key Words:</b></p></td>
+									<td><input type="text" id="scrapbox" class="analyst-scrap-box"></td>
+									<td>
+										<select name="entity-type" id="entityTypeSelect" class="analyst-entity-select" style="height: 20px;padding-top: 0px;">
+											<option default value="">Select Entity Type</option>
+											<option value="Person">Person</option>
+											<option value="Location">Location</option>
+											<option value="Money">Money</option>
+											<option value="Phone">Phone</option>
+											<option value="Organization">Organization</option>
+											<option value="Misc">Miscellaneous</option>
+											<option value="Date">Date</option>
+											<option value="nonEntity">Others</option>
+										</select>
+									</td>
+									<td style="text-align: left;">
+										<button type="button" id="addScrap" class="add-scrap" style="margin-bottom:10px;height:20px;"> <i class=" icon-plus-sign"></i> </button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>	
+			</div>
+            <div id="analyst-right-side" class="pull-left analyst-right-side">
+				<div class="tab-content">
+					<div class="mini-header-tabber">
+						<ul id="ind-tab-keyword-menu" class="nav nav-tabs full mini">
+							<li class="mini-header">
+								<a>Concept Graph</a>
+							</li>
+							<li class="pull-right" id="edit-tab">
+								<a href="#editViewContainer" data-toggle="tab">
+									Edit
+								</a>
+							</li>
+							<li class="pull-right active" id="graph-tab">
+								<a href="#graphContainer" data-toggle="tab">
+									Graph
+								</a>
+							</li>      
+						</ul>
+					</div>                    
+					<div class="keyword-picker keyword-picker-1080">
+						<div class="tab-content">
+							<div class="tab-pane" id="editViewContainer">	                                	
+								<div id="editView" class="edit-place scrollable">
+								</div>          
+							</div>
+							<div class="tab-pane scrollable" id="lineStyleViewContainer">
+								<div id="threeEntityView" class="threeEntity-place">
+									<table align="center" style="width:100%; padding-left:5px;font-size: 14px; margin-bottom: 3px;">
+										<tr>
+											<td colspan="2" style="padding-left: 90;">
+												Entity 1
+											</td>
+											<td colspan="2" style="padding-left: 90;">
+												Entity 2
+											</td>
+											<td colspan="2" style="padding-left: 90;">
+												Entity 3
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2" >
+												<input type="radio" name="entity1" value="Single" id="entity1Single" class="singleRadio"> Single <span id="entity1SingleValue"></span><br>
+												<input type="radio" name="entity1" value="All" checked="checked" class="allRadio"> All<br>
+											</td>
+											<td colspan="2" >
+												<input type="radio" name="entity2" value="Single" id="entity2Single" class="singleRadio" disabled="true"> Single <span id="entity2SingleValue"></span><br>
+												<input type="radio" name="entity2" value="All" checked="checked" class="allRadio" disabled="true"> All<br>
+											</td>
+											<td colspan="2">
+												<input type="radio" name="entity3" value="Single" id="entity3Single" class="singleRadio" disabled="true"> Single <span id="entity3SingleValue"></span><br>
+												<input type="radio" name="entity3" value="All" checked="checked" class="allRadio" disabled="true"> All<br>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<select id="entity1Select" class="line-style-select">
+													<option value="" selected="selected">-- Select Entity Type --</option>
+													<option value="Person">Person</option>
+													<option value="Date">Date</option>
+													<option value="Location">Location</option>
+													<option value="Organization">Organization</option>
+													<option value="Money">Money</option>
+													<option value="Phone">Phone</option>
+													<option value="Miscellaneous">Miscellaneous</option>
+													<option value="Non-Entity">Non-Entity</option>
+												</select>
+											</td>
+											<td>
+												<div class="entityConnect">
+												</div>
+											</td>
+											<td>
+												<select id="entity2Select" class="line-style-select" disabled="true">
+													<option value="" selected="selected">-- Select Entity Type --</option>
+													<option value="Person">Person</option>
+													<option value="Date">Date</option>
+													<option value="Location">Location</option>
+													<option value="Organization">Organization</option>
+													<option value="Money">Money</option>
+													<option value="Phone">Phone</option>
+													<option value="Miscellaneous">Miscellaneous</option>
+													<option value="Non-Entity">Non-Entity</option>
+												</select>
+											</td>
+											<td>
+												<div class="entityConnect">
+												</div>
+											</td>
+											<td>
+												<select id="entity3Select" class="line-style-select" disabled="true">
+													<option value="" selected="selected">-- Select Entity Type --</option>
+													<option value="Person">Person</option>
+													<option value="Date">Date</option>
+													<option value="Location">Location</option>
+													<option value="Organization">Organization</option>
+													<option value="Money">Money</option>
+													<option value="Phone">Phone</option>
+													<option value="Miscellaneous">Miscellaneous</option>
+													<option value="Non-Entity">Non-Entity</option>
+												</select>
+											</td>
+										</tr>
+										
+										<tr>
+											<td colspan="2">
+												Color : <br>
+												<div id="lineColourSelect" class="line-color-select">
+													<div id="lineColourSelected" class="line-color-selected">
+													</div>
+													<div id="lineColorSelectButton" class="line-color-select-button"></div> 
+												</div> 
+												<div id="lineColorSelectOptions" class="line-color-select-options-hide">
+													<div id="lineColorBlue" class="lineColorOption">
+													</div>
+													<div id="lineColorGreen" class="lineColorOption">
+													</div>
+													<div id="lineColorBrown" class="lineColorOption">
+													</div>
+													<div id="lineColorGold" class="lineColorOption">
+													</div>
+													<div id="lineColorPurple" class="lineColorOption">
+													</div>
+													<div id="lineColorRed" class="lineColorOption">
+													</div>
+												</div>
+												<!-- <select id="colourSelect">
+													<option value="Blue">Blue</option>
+													<option value="Brown">Brown</option>
+													<option value="Gold">Gold</option>
+													<option value="Green">Green</option>
+													<option value="Purple">Purple</option>
+												</select> -->
+											</td>
+											<td colspan="2">
+												Line Style : <br>
+														<div id="lineStrokeSelect" class="line-stroke-select">
+														<div id="lineStorkeSelected" class="line-stroke-selected">
+														</div>
+														<div id="lineStrokeSelectButton" class="line-stroke-select-button">
+														</div> 
+													</div>
+												<div id="lineStrokeSelectOptions" class="line-stroke-select-options-hide">
+													<div id="lineStroke10" class="lineStrokeOption">
+													</div>
+													<div id="lineStroke22" class="lineStrokeOption">
+													</div>
+													<div id="lineStroke63" class="lineStrokeOption">
+													</div>
+													<div id="lineStroke8343" class="lineStrokeOption">
+													</div>
+													<div id="lineStroke6828" class="lineStrokeOption">
+													</div>
+												</div> 
+												<!-- <select id="lineStyleSelect">
+													<option value="2 2">2 2</option>
+													<option value="5 2">5 2</option>
+													<option value="1 1">1 1</option>
+													<option value="2 4">2 4</option>
+													<option value="4 1">4 1</option>
+												</select>  -->
+											</td>
+											<td style="padding-top: 18px;">
+												<button type="button" id="addLineStyle" class="line-style-button" disabled="true">ADD</button>
+											</td>
+										</tr>
+										<tr>
+											<td >
+												
+											</td>
+										</tr>
+									</table>
+								</div>  
+								<div id="lineStyleViewContainer" class="tab-pane"> 
+									<div id="lineStylePlace" style="width:100%; height:63%">
+									</div> 
+								</div>      
+							</div>
+							<div class="legend-place" id="legendPlace">
+								<div class="pull-left">
+								<span class="legend-blocks-container">
+									<div class="analyst-legend-block description clicked"></div>Label
+									<div class="analyst-legend-block node-Name clicked"></div>Node Name
+									<div class="analyst-legend-block toogleLabel clicked"></div>Label Orientation
+								</span>
+							</div>
+							<div class="pull-right entity-legend">
+								<span class="legend-blocks-container">
+								<div class="analyst-legend-block entityblock personblock"></div>Person
+								<div class="analyst-legend-block entityblock dateblock"></div>Date
+								<div class="analyst-legend-block entityblock locationblock"></div>Location
+								<div class="analyst-legend-block entityblock organizationblock"></div>Organization
+								<div class="analyst-legend-block entityblock moneyblock"></div>Money
+								<div class="analyst-legend-block entityblock phoneblock"></div>Phone
+								<div class="analyst-legend-block entityblock miscblock"></div>Miscellaneous
+								<div class="analyst-legend-block entityblock nonEntityblock"></div>Others
+								</span>
+							</div>
+							</div>
+							<!--  <br>
+							<div>
+								<div class="pull-right">
+									<input id="changeStrokeLabel" class="change-stroke-field search-field" type="text" placeholder="Label">
+									<div style="width:24px">
+									<a class="geButton geColorBtn" title="Pattern" style="opacity: 1; border: 1px solid rgb(160, 160, 160); width: auto; border-radius: 3px; height: 15px; background-image: none; background-color: white;">
+										<div class="geIcon" style="padding-right: 6px; margin-left: 4px; margin-top: -1px; display: inline-block; opacity: 0.6; width: 22px;">
+											<div style="width: 23px; height: 1px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; margin-bottom: 9px;">
+											</div>
+										</div>
+										<div style="display: inline-block; padding: 5px 4px 6px 6px; height: 9px; border-left-width: 1px; border-left-style: solid; border-left-color: rgb(160, 160, 160); opacity: 0.7;">
+											<img border="0" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHBJREFUeNpidHB2ZyAGsACxDRBPIKCuA6TwCBB/h2rABu4A8SYmKCcXiP/iUFgAxL9gCi8A8SwsirZCMQMTkmANEH9E4v+CmsaArvAdyNFI/FlQ92EoBIE+qCRIUz168DBgsU4OqhinQpgHMABAgAEALY4XLIsJ20oAAAAASUVORK5CYII=" style="margin-bottom:4px;">
+										</div>
+									</a>
+									</div>
+									<button id="changeStroke" class="btn btn-default btn-xs change-stroke">Change</button>
+								
+							</div>
+							</div>	 -->
+							<div class="tab-pane  active" id="graphContainer">
+								<div id="graph" class="graph-place">
+								</div> 
+							</div>                                
+						</div>
+					</div>
+					<div class="mini-header-tabber">
+						<ul id="agg-tab-reviews-menu" class="nav nav-tabs full mini">
+							<li class="mini-header">
+								<a>Map</a>
+							</li>
+						</ul>
+					</div>
+					<div class="analyst-map-container" id="mapContainer">
+						<div id="mapPlace" class="map-place">
+						</div>
+					</div>
+					<div class="analyst-bottom-middle">  
+						<div class="mini-header-tabber">
+							<ul id="agg-tab-reviews-menu" class="nav nav-tabs full mini">
+								<li class="mini-header">
+									<a>Time Series</a>
+								</li>
+								<li class="pull-right  active" id="edit-tab">
+									<a href="#forceTimeSeries" data-toggle="tab">
+										Force-Directed
+									</a>
+								</li>
+								<li class="pull-right" id="threeView-tab">
+									<a href="#timeSeriesGraph" data-toggle="tab">
+										Stacked
+									</a>
+								</li>
+							</ul>
+						</div>             
+						<!-- <div class="mini-header">Time Series</div> -->
+						<div class="tab-content">
+							<div id="timeSeriesGraph" class="analyst-timeSeriesContainer tab-pane">
+								<div id="timeline" class="analyst-timeline-place">
+								<div id="naviBand" class="navi-Band">
+								</div>
+								<div id="mainBand" class="main-Band scrollable">
+								</div>
+								</div>
+							</div> 
+							<div id="forceTimeSeries" class="analyst-forceTimeSeriesContainer tab-pane  active">
+								<div id="forcetimeline" class="analyst-force-timeline-place scrollable">
+								</div>
+							</div>  
+						</div>
+					</div>                                    
+				</div>            
+            </div>            
+		</div> 
+		
+		<!-- JQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+		<!-- D3.js -->
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script src="https://d3js.org/d3-collection.v1.min.js"></script>
+		<script src="https://d3js.org/d3-quadtree.v1.min.js"></script>
+		<script src="https://d3js.org/d3-timer.v1.min.js"></script>
+		<script src="https://d3js.org/d3-force.v1.min.js"></script>
+		<script src="https://d3js.org/d3-voronoi.v1.min.js"></script>
+		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+		<script src="/javascripts/d3-context-menu.js"></script> 
+
+		<!-- leaflet.js for maps-->
+		<script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+
+		<!-- slickGrid-->
+		<script src="/javascripts/slickGrid/jquery.event.drag-2.2.js"></script>
+		<script src="/javascripts/slickGrid/slick.core.js"></script>
+		<script src="/javascripts/slickGrid/slick.core.js"></script>
+		<script src="/javascripts/slickGrid/plugins/slick.cellrangedecorator.js"></script>
+		<script src="/javascripts/slickGrid/plugins/slick.cellrangeselector.js"></script>
+		<script src="/javascripts/slickGrid/plugins/slick.cellselectionmodel.js"></script>
+		<script src="/javascripts/slickGrid/slick.formatters.js"></script>
+		<script src="/javascripts/slickGrid/slick.editors.js"></script>
+		<script src="/javascripts/slickGrid/slick.grid.js"></script>
+		<script src="/javascripts/slickGrid/slick.dataview.js"></script>		
+		<script src="/javascripts/jquery.ddslick.min.js"></script>
+
+		<!-- bootstrap -->
+		<script src="/javascripts/bootstrap.min.js"></script>
+
+		<!-- Multiple Select -->
+		<script src="/javascripts/multiple-select.js"></script>
+
+		<!-- NLP packages -->
+		<script src="/javascripts/PorterStemmer1980.min.js"></script>
+		<script src="/javascripts/Stop_words.js"></script>
+
+		<!-- user defined packages -->
+		<script src="/javascripts/analystglobal.js"></script>
+		<script src="/javascripts/populateDocView.js"></script>
+		<script src="/javascripts/highlight.js"></script>
+		<script src="/javascripts/buildDocView.js"></script>
+
+		
+		<script src="/javascripts/TimeSeries.js"></script>
+		
+		<script src="/javascripts/nonEntityHighlight.js"></script>
+		<script src="/javascripts/newConceptGraph.js"></script>
+		<script src="/javascripts/mapicons.js"></script>
+		<script src="/javascripts/editTable.js"></script>
+		
+		<script src="/javascripts/timeline.js"></script>
+		<script src="/javascripts/newMap.js"></script>
+		<script src="/javascripts/scrapPaperTable.js"></script>
+		<script src="/javascripts/keyWordHistogram.js"></script>
+		<script src="/javascripts/userHisto.js"></script>
+		<script src="/javascripts/lineStyle.js"></script>
+		<script src="/javascripts/forceTimeLine.js"></script>
+		<script>
+			var allDocsView = false;
+		</script>
+    </body>
+</html>
