@@ -52,12 +52,8 @@ router.post('/add/:userId', function(req, res){
 
 router.post('/addlink/:userId', function(req,res) {
 
-	console.log("inside addlink post");
-
 	var db = req.db;
 	var collection = db.get('users');
-
-	console.log("req.body", req.body);
 
 	collection.update(
 		{ 	userId: req.params.userId },
@@ -79,8 +75,6 @@ router.post('/addlink/:userId', function(req,res) {
 		}
 	);
 });
-
-
 
 
 /* 

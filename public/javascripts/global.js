@@ -439,7 +439,6 @@ $(document).ready(function() {
     	defaultDate: defaultStartDate
     });
     
-    
     $("#selectReset").click(function(){   	
     	resetSelection();
     }); 
