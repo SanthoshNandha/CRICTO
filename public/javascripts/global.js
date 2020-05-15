@@ -6,6 +6,9 @@
 /***  Start of application level variables ***/
 
 var isEntityDate = false;
+var visualizedWorkerId = [];
+var visualizedDocId = [];
+var visualizedKeywords =[];
 
 /***  End of application level variables ***/
 
@@ -20,9 +23,9 @@ var arrow = false;
 var repeat_count = 0;
 var bookMarkDocs = [];
 
-var visualizedKeywords =[];
-var visualizedWorkerId = [];
-var visualizedDocId = [];
+
+
+
 var deletedKeywords = [];
 
 var editData = [];
@@ -118,8 +121,13 @@ $(document).ready(function() {
 		else{
 			// Check if the user exist
 			sessionStorage.setItem('userId', userId);
+			visualizedWorkerId.push(userId);
+
 			$.get("users/get/" + sessionStorage.getItem('userId') , function(data){
+				console.log(data);
+				link_no = data.links.length;
 				showMainPage();
+				getLinks(false);
 			})
 			.fail(function(err){
 				if(err.status == 404){
@@ -131,21 +139,6 @@ $(document).ready(function() {
 					});
 				}
 			});
-				
-			// $.post("/users/addNewWorker", {"workerId": workerId }, function(res){
-			// 	if(res.totalLinks){
-			// 		link_no = Number(res.totalLinks)
-			// 		$("#linkCountSpan").html("<b>Links Created :" + link_no +"<b>");
-			// 		if(link_no > 0){
-			// 			// Add the current logged in ID to the list of IDs 
-			// 			visualizedWorkerId.push(workerId);
-			// 			getLinks(false);
-			// 		}
-			// 	}
-			// 	$("#loginDiv").addClass("analyst-login-div-hide");
-			// 	$("#analystMainPage").removeClass("analys-main-page-hide");
-			// 	window.open("/intstruction", "_blank", "toolbar=no, scrollbars=yes, resizable=yes, location=no, top=auto, left=auto, width=500, height=500");
-			// });
 		}
 
 		//For general analysts view
@@ -173,11 +166,11 @@ $(document).ready(function() {
 			if((queue[1].Type == "Date") || (queue[1].Type == "Date")){
 				isEntityDate = true;
 				if(queue[1].Type == "Date"){
-				Term = queue[1].selection;
+					Term = queue[1].selection;
 				}
 				else{
-				Term = queue[1].selection;
-					} 
+					Term = queue[1].selection;
+				} 
 			}
 		}
     	
@@ -413,7 +406,7 @@ $(document).ready(function() {
 					resetSelection();
 					//getWorkersLinks(selects+","+workerId);
 					//visualizedWorkerId.push(workerId);
-					//getLinks(false);
+					getLinks(false);
 				}
 			});
 		}
@@ -459,16 +452,13 @@ function resetSelection(){
 	queue = [];
 };
 
+//function to generate all the links of the user
 function getLinks(updateDocs){
-	var currentWorker = null;
+
 	var workersIds =  visualizedWorkerId.join(",");
 	var docId = visualizedDocId.join(",");
 	var keyWords = visualizedKeywords.join(",");
 	var removedWords = deletedKeywords.join(",");
-	
-	if(workerId != undefined || workerId != null ){
-		currentWorker = workerId;
-	}
 	
 	if(workersIds.length == 0){
 		workersIds = ["null"];
@@ -486,6 +476,7 @@ function getLinks(updateDocs){
 	$.getJSON("/users/getLinks/"+workersIds+"/"+docId+"/"+keyWords+"/"+removedWords,function(data){
 		drawNewGraphs(data,updateDocs);		
 	});
+
 	deletedKeywords = [];
 }
 
@@ -495,14 +486,14 @@ function drawNewGraphs(data,updateDocs){
 	var activePanel;
 	var activeTimeLine;
 
-
 	if(!$("#graphContainer").hasClass("active")){
-	activePanel = "#editViewContainer";
-	$("#graphContainer").addClass("active");
+		activePanel = "#editViewContainer";
+		$("#graphContainer").addClass("active");
 	}
+
 	if(!$("#editViewContainer").hasClass("active")){
-	activePanel = "#graphContainer";
-	$("#editViewContainer").addClass("active");
+		activePanel = "#graphContainer";
+		$("#editViewContainer").addClass("active");
 	}
 
 	timeSeriesChart=[];
@@ -514,18 +505,18 @@ function drawNewGraphs(data,updateDocs){
 	nodeLocationJson = [];
 
 	$.each( data, function( key, val ) {
-	var workerId = val.workerId;
-	if(val.link != undefined){
-		for(var i=0;i<val.link.length;i++){
-				var linkCombination = val.link[i].combinationId;
-				var linkDescription = val.link[i].description;
-				var startDate = val.link[i].startDate;
-				var endDate = val.link[i].endDate;
-				var sval = val.link[i].sourceNode.node;
-				var tval = val.link[i].targetNode.node;
-				var sEntityType = val.link[i].sourceNode.entityType;
-				var tEntityType = val.link[i].targetNode.entityType;
-				var linkNo = val.link[i].linkNo;
+		var workerId = val.userId;
+		if(val.links != undefined){
+			for(var i=0;i<val.links.length;i++){
+				var linkCombination = val.links[i].combinationId;
+				var linkDescription = val.links[i].description;
+				var startDate = val.links[i].startDate;
+				var endDate = val.links[i].endDate;
+				var sval = val.links[i].sourceNode.node;
+				var tval = val.links[i].targetNode.node;
+				var sEntityType = val.links[i].sourceNode.entityType;
+				var tEntityType = val.links[i].targetNode.entityType;
+				var linkNo = val.links[i].linkNo;
 				
 				var locationJson={};
 				var rowJson={};
@@ -537,6 +528,7 @@ function drawNewGraphs(data,updateDocs){
 				rowJson["targetNode"] = tval;
 				rowJson["targetType"] = tEntityType;
 				rowJson["startDate"] = customTimeFormat(new Date(startDate));
+
 				if(endDate != null){
 					rowJson["endDate"] = customTimeFormat(new Date(endDate));
 				}
@@ -549,12 +541,10 @@ function drawNewGraphs(data,updateDocs){
 				
 				editLinkArray.push(rowJson);
 				
-				if(sEntityType == "Location" && val.link[i].sourceNode.lat != undefined && val.link[i].sourceNode.lon != undefined ){
-				// var oldLocationPos = hasLocation(val.link[i].sourceNode.lat, val.link[i].sourceNode.lon );
-					//if(Number(oldLocationPos) == -1){
+				if(sEntityType == "Location" && val.links[i].sourceNode.lat != undefined && val.links[i].sourceNode.lon != undefined ){
 					var flag=true;
-					var lat = Number(val.link[i].sourceNode.lat) + (Math.random()/2);
-					var lon = Number(val.link[i].sourceNode.lon) + (Math.random()/2);
+					var lat = Number(val.links[i].sourceNode.lat) + (Math.random()/2);
+					var lon = Number(val.links[i].sourceNode.lon) + (Math.random()/2);
 						locationJson["locationName"]=sval;
 						locationJson["target"]=tval;
 						locationJson["targetType"]=tEntityType;
@@ -576,10 +566,10 @@ function drawNewGraphs(data,updateDocs){
 						}
 			}
 				
-			if(tEntityType == "Location" && val.link[i].targetNode.lat != undefined && val.link[i].targetNode.lon != undefined && sEntityType != "Location"){
+			if(tEntityType == "Location" && val.links[i].targetNode.lat != undefined && val.links[i].targetNode.lon != undefined && sEntityType != "Location"){
 				var flag=true;
-				var lat = Number(val.link[i].targetNode.lat) + (Math.random()/2);
-				var lon = Number(val.link[i].targetNode.lon) + (Math.random()/2);
+				var lat = Number(val.links[i].targetNode.lat) + (Math.random()/2);
+				var lon = Number(val.links[i].targetNode.lon) + (Math.random()/2);
 						locationJson["locationName"]=tval;
 						locationJson["target"]=sval;
 						locationJson["targetType"]=sEntityType;
@@ -640,7 +630,7 @@ function drawNewGraphs(data,updateDocs){
 					sObj["startDates"].push(startDate);
 					sObj["endDates"].push(endDate);
 					graphNodes.push(sObj);
-					val.link[i].sourceNode["nodeId"] = s.index;
+					val.links[i].sourceNode["nodeId"] = s.index;
 				}
 				else{
 					graphNodes[s.index].startDates.push(startDate);
@@ -657,7 +647,7 @@ function drawNewGraphs(data,updateDocs){
 					tObj["startDates"].push(startDate);
 					tObj["endDates"].push(endDate);
 					graphNodes.push(tObj);
-					val.link[i].targetNode["nodeId"] = t.index;
+					val.links[i].targetNode["nodeId"] = t.index;
 				}
 					
 				else{
@@ -688,8 +678,8 @@ function drawNewGraphs(data,updateDocs){
 					graphLinks[oldLinkNo].toolTip = true ;
 				}
 				
-				var sourceDocId =  val.link[i].sourceNode.docID;
-				var targetDocId =  val.link[i].targetNode.docID;
+				var sourceDocId =  val.links[i].sourceNode.docID;
+				var targetDocId =  val.links[i].targetNode.docID;
 				
 				if($.inArray( sourceDocId, workerDocList ) == -1){
 					workerDocList.push(sourceDocId);
@@ -703,17 +693,17 @@ function drawNewGraphs(data,updateDocs){
 	});
 
 	if(updateDocs){
-	generateWorkerDocs(workerDocList.join(","),"userList");
-	workerDocList = [];
+		generateWorkerDocs(workerDocList.join(","),"userList");
+		workerDocList = [];
 	}
 
 	if(!$("#timeSeriesGraph").hasClass("active")){
-	activeTimeLine = "#forceTimeSeries";
-	$("#timeSeriesGraph").addClass("active");
+		activeTimeLine = "#forceTimeSeries";
+		$("#timeSeriesGraph").addClass("active");
 	}
 	if(!$("#forceTimeSeries").hasClass("active")){
-	activeTimeLine = "#timeSeriesGraph";
-	$("#forceTimeSeries").addClass("active");
+		activeTimeLine = "#timeSeriesGraph";
+		$("#forceTimeSeries").addClass("active");
 	}
 
 	drawEditViewTable(editLinkArray);
@@ -723,187 +713,21 @@ function drawNewGraphs(data,updateDocs){
 	startForceTimeLine(timeSeriesChart);
 
 	if(activePanel =="#graphContainer"){
-	$("#editViewContainer").removeClass("active");
+		$("#editViewContainer").removeClass("active");
 	}
 
 	if(activePanel =="#editViewContainer"){
-	$("#graphContainer").removeClass("active");
+		$("#graphContainer").removeClass("active");
 	}
 
 	if(activeTimeLine =="#timeSeriesGraph"){
-	$("#forceTimeSeries").removeClass("active");
-
+		$("#forceTimeSeries").removeClass("active");
 	}
 
 	if(activeTimeLine =="#forceTimeSeries"){
-	$("#timeSeriesGraph").removeClass("active");
+		$("#timeSeriesGraph").removeClass("active");
 	}
 };
-
-function drawGraphs(){
-	
-	var activePanel;
-	if(!$("#graphContainer").hasClass("active")){
-		activePanel = "#editViewContainer";
-		$("#graphContainer").addClass("active");
-	}
-	if(!$("#editViewContainer").hasClass("active")){
-		activePanel = "#graphContainer";
-		$("#editViewContainer").addClass("active");
-	}
-	
-	
-	
-	graphNodes=[];
-	graphLinks=[];
-	timeSeriesChart=[];
-	 
-	 $.getJSON('/users/links/'+workerId, function(data) {
-		 
-		 visualData=data;
-		 for(var i=0; i<visualData[0].link.length; i++){
-			 var linkCombination = visualData[0].link[i].combinationId;
-			 var linkDescription = visualData[0].link[i].description;
-			 var startDate = visualData[0].link[i].startDate;
-			 var endDate = visualData[0].link[i].endDate;
-			 var sval = visualData[0].link[i].sourceNode.node;
-		     var tval = visualData[0].link[i].targetNode.node;
-		     var sEntityType = visualData[0].link[i].sourceNode.entityType;
-		     var tEntityType = visualData[0].link[i].targetNode.entityType;
-		     
-		     
-		     var startDateobj = timeSeriesTimeFormat(new Date(startDate));
-		     var endDateObj="";
-		     if(endDate != null){
-		    	 endDateObj = timeSeriesTimeFormat(new Date(endDate));
-		     }
-		     
-		     
-		     var timeData = {		            
-			            instant:false,
-			            sourceNode:sval,
-			            targetNode:tval,
-			            label:linkDescription,
-			            start:startDateobj,
-			            end:endDateObj,
-			            track:i
-			        };
-			        
-			 timeSeriesChart.push(timeData);
-		     
-		     
-		     
-		     
-		     var sObj = {
-		            id: sval,
-		            entityType:sEntityType
-		        };
-		        var tObj = {
-		            id: tval,
-		            entityType:tEntityType
-		        };
-		        var s = hasId(sval);
-		        if (s.result == false){
-		        	sObj["nodeId"] = s.index;
-		        	sObj["startDates"] = [];
-		        	sObj["endDates"] = [];
-		        	sObj["startDates"].push(startDate);
-		        	sObj["endDates"].push(endDate);
-		        	graphNodes.push(sObj);
-		        	visualData[0].link[i].sourceNode["nodeId"] = s.index;
-		        }
-		        else{
-		        	graphNodes[s.index].startDates.push(startDate);
-		        	graphNodes[s.index].endDates.push(endDate);
-		        	sObj = graphNodes[s.index];
-		        }
-		        
-		        var t = hasId(tval);
-
-		        if (t.result == false){
-		        	tObj["nodeId"] = t.index;
-		        	tObj["startDates"] = [];
-		        	tObj["endDates"] = [];
-		        	tObj["startDates"].push(startDate);
-		        	tObj["endDates"].push(endDate);
-		        	graphNodes.push(tObj);
-		            visualData[0].link[i].targetNode["nodeId"] = t.index;
-		        }
-		        	
-		        else{
-		        	graphNodes[t.index].startDates.push(startDate);
-		        	graphNodes[t.index].endDates.push(endDate);
-		        	tObj = graphNodes[t.index];
-		        }
-		            
-		        
-		        var oldLinkNo = hasLink(sval, tval);
-		        
-		        if (oldLinkNo == -1){
-		            graphLinks.push({
-		                source: sObj,
-		                target: tObj,
-		                label: linkDescription,
-		                combinationId:linkCombination
-		            });
-				}
-		        else{
-		        	
-		        	if(graphLinks[oldLinkNo].strokeSize == null){
-		        		graphLinks[oldLinkNo].strokeSize = 2;
-		        	}
-		        	else{
-		        		graphLinks[oldLinkNo].strokeSize = graphLinks[oldLinkNo].strokeSize + 2;
-		        	}
-		        	graphLinks[oldLinkNo].label = graphLinks[oldLinkNo].label + "/" + linkDescription ;
-		        	graphLinks[oldLinkNo].toolTip = true ;
-		        }
-		        
-		 }
-		 
-		 totalLinkCount = visualData[0].link.length;
-		 
-		// startTimeLine(timeSeriesChart);
-		
-		createForceDirectedGraph();
-		//generateTime();
-		//mapVisualization(visualData[0].link);
-		//drawEditLinks(visualData);
-		
-		if(activePanel =="#graphContainer"){
-			$("#editViewContainer").removeClass("active");
-			
-		}
-		
-		if(activePanel =="#editViewContainer"){
-			$("#graphContainer").removeClass("active");
-			
-		}
-		if(activePanel =="#graphContainer"){
-			$("#editViewContainer").removeClass("active");
-			
-		}
-		
-		if(activePanel =="#editViewContainer"){
-			$("#graphContainer").removeClass("active");
-			
-		}
-		
-		resetSelection();
-		
-		$("#getRelatedDocsButton").show();
-	 });
-}
-
-hasLocation = function(lat, lon) {
-    for (var i = 0; i < locationArray.length ; i ++) {
-        if ((locationArray[i].lat == lat) && (locationArray[i].lon == lon)) {
-            return i;
-        }
-    }
-    return -1;
-};
-
 
 function appendtoNodeLocationnew(location, newnode, latitude, longitude,startDate,combinationId,targetType){
 	
