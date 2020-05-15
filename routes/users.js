@@ -50,14 +50,11 @@ router.post('/add/:userId', function(req, res){
 	});
 });
 
+/* add links */
 router.post('/addlink/:userId', function(req,res) {
-
-	console.log("inside addlink post");
 
 	var db = req.db;
 	var collection = db.get('users');
-
-	console.log("req.body", req.body);
 
 	collection.update(
 		{ 	userId: req.params.userId },
@@ -80,50 +77,65 @@ router.post('/addlink/:userId', function(req,res) {
 	);
 });
 
+/* Get the filtered links */
+router.get('/getLinks/:workerIds/:docIds/:keywords/:removedKeywords',function(req,res){
+	
+	var workerIds=[];
+	var docIds=[];
+	var keywords=[];
+	var removedKeywords=[];
+	var isRemoved;
 
-
-
-/* 
-  Add new woker or analyst if logged in 1st time
-  else collect all the links created by the worker or analyst earlier
-*/
-router.post("/addNewWorker", function(req, res){
-
-	var workerID = req.body.workerId
 	var db = req.db;
-	var collection = db.get('users');
+	var collection = db.get('users'); 
+	
+	if(req.params.workerIds != undefined || req.params.workerIds != null)
+			workerIds=req.params.workerIds.split(",");
+	
+	if(req.params.docIds != undefined || req.params.docIds != null)
+		docIds=req.params.docIds.split(",");
+	
+	if(req.params.keywords != undefined || req.params.keywords != null)
+		keywords=req.params.keywords.split(",");
+	
+	if(req.params.removedKeywords != undefined || req.params.removedKeywords != null)
+		removedKeywords=req.params.removedKeywords.split(",");
+	
+	collection.find({},{},function(e,docs){
+		docs.forEach(function( val, key ) {
+			if(val.userId != undefined){
+				if(workerIds.indexOf(val.userId) == -1){					
+					if(val.links != undefined){
+						for(var i=val.links.length-1;i >=0;i--){
+							isRemoved = false;
+							if((keywords.indexOf(val.links[i].sourceNode.node) == -1 && keywords.indexOf(val.links[i].targetNode.node) == -1) 
+								&& (docIds.indexOf(val.links[i].sourceNode.docID) == -1 && docIds.indexOf(val.links[i].targetNode.docID) == -1)){
 
-  //Find if the worked ID already exsist
-  collection.find({"workerId": workerID}, {}, function(err, results){
-		if(!err){
-			if(results.length == 0){
-				document = {
-					"workerId": workerID,
-					"timeStamp": new Date().getTime()
-				}
-
-				collection.insert(document, function(err, result){
-					res.json(
-						{
-							"error" : err,
-							"updateResult" : result,
+								isRemoved = true
+								val.links.splice(i, 1);
+							}
+							if(!isRemoved){
+								if(removedKeywords.indexOf(val.links[i].sourceNode.node) != -1 || removedKeywords.indexOf(val.links[i].targetNode.node) != -1){
+									val.links.splice(i, 1);
+								}
+							}
 						}
-					);
-				});
-			}
-			else{
-        // IF there are link created ealier
-				if(results[0].link){
-					var totalLinks = results[0].link.length
-					res.json({"totalLinks": totalLinks});
-        }
-        // send there are zero links
+					}
+				}
 				else{
-					res.json({"totalLinks": 0});
+					if(val.links != undefined){
+						for(var i=val.links.length-1;i >=0;i--){
+							if(removedKeywords.indexOf(val.links[i].sourceNode.node) != -1 || removedKeywords.indexOf(val.links[i].targetNode.node) != -1){
+								val.links.splice(i, 1);
+							}
+						}
+					}
 				}
 			}
-		}
+		});
+		res.status(200).json(docs);		
 	});
 });
+
 
 module.exports = router;

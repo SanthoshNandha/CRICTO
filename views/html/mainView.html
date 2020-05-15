@@ -10,10 +10,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
 	    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"/>
-	    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
-	    <link rel="stylesheet" href="/stylesheets/d3-context-menu.css" />
-	    <link rel="stylesheet" href="/stylesheets/jquery-ui.css"/>
-	    <link rel="stylesheet" href="/stylesheets/multiple-select.css"/>
+	    <link href="/stylesheets/vendor/bootstrap.min.css" rel="stylesheet" media="screen">
+	    <link rel="stylesheet" href="/stylesheets/vendor/d3-context-menu.css" />
+	    <link rel="stylesheet" href="/stylesheets/vendor/jquery-ui.css"/>
+	    <link rel="stylesheet" href="/stylesheets/vendor/multiple-select.css"/>
 	    <link rel="stylesheet" href="/stylesheets/newIndexStyle.css"/>
 	    <link rel="stylesheet" href="/stylesheets/style.css"/>
 	    <link rel="stylesheet" href="/stylesheets/analystViewStyles.css"/>
@@ -424,7 +424,7 @@
 		<script src="https://d3js.org/d3-force.v1.min.js"></script>
 		<script src="https://d3js.org/d3-voronoi.v1.min.js"></script>
 		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-		<script src="/javascripts/d3-context-menu.js"></script> 
+		<script src="/javascripts/vendor/d3-context-menu.js"></script> 
 
 		<!-- leaflet.js for maps-->
 		<script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
@@ -440,41 +440,30 @@
 		<script src="/javascripts/slickGrid/slick.editors.js"></script>
 		<script src="/javascripts/slickGrid/slick.grid.js"></script>
 		<script src="/javascripts/slickGrid/slick.dataview.js"></script>		
-		<script src="/javascripts/jquery.ddslick.min.js"></script>
+		<script src="/javascripts/vendor/jquery.ddslick.min.js"></script>
 
 		<!-- bootstrap -->
-		<script src="/javascripts/bootstrap.min.js"></script>
+		<script src="/javascripts/vendor/bootstrap.min.js"></script>
 
 		<!-- Multiple Select -->
-		<script src="/javascripts/multiple-select.js"></script>
+		<script src="/javascripts/vendor/multiple-select.js"></script>
 
 		<!-- NLP packages -->
-		<script src="/javascripts/PorterStemmer1980.min.js"></script>
-		<script src="/javascripts/Stop_words.js"></script>
+		<script src="/javascripts/vendor/PorterStemmer1980.min.js"></script>
+		<script src="/javascripts/vendor/Stop_words.js"></script>
 
 		<!-- user defined packages -->
-		<script src="/javascripts/analystglobal.js"></script>
-		<script src="/javascripts/populateDocView.js"></script>
+		<script src="/javascripts/global.js"></script>
+		<script src="/javascripts/docView.js"></script>
 		<script src="/javascripts/highlight.js"></script>
-		<script src="/javascripts/buildDocView.js"></script>
-
-		
-		<script src="/javascripts/TimeSeries.js"></script>
-		
-		<script src="/javascripts/nonEntityHighlight.js"></script>
-		<script src="/javascripts/newConceptGraph.js"></script>
+		<script src="/javascripts/graphView.js"></script>
 		<script src="/javascripts/mapicons.js"></script>
-		<script src="/javascripts/editTable.js"></script>
-		
-		<script src="/javascripts/timeline.js"></script>
-		<script src="/javascripts/newMap.js"></script>
-		<script src="/javascripts/scrapPaperTable.js"></script>
-		<script src="/javascripts/keyWordHistogram.js"></script>
-		<script src="/javascripts/userHisto.js"></script>
+		<script src="/javascripts/editView.js"></script>
+		<script src="/javascripts/timeSeriesStacked.js"></script>
+		<script src="/javascripts/mapView.js"></script>
+		<script src="/javascripts/scratchPadView.js"></script>
+		<script src="/javascripts/histogramView.js"></script>
 		<script src="/javascripts/lineStyle.js"></script>
-		<script src="/javascripts/forceTimeLine.js"></script>
-		<script>
-			var allDocsView = false;
-		</script>
+		<script src="/javascripts/timeSeriesForceView.js"></script>
     </body>
 </html>

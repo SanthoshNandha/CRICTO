@@ -31,8 +31,6 @@ function addScrap(){
 			}
 		}
 		
-		console.log("entity -- " + entity);
-		
 		if(!isError){
 			
         		var newdiv = document.createElement('div');

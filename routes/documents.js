@@ -26,7 +26,10 @@ router.get('/docdate/:docid', function(req, res, next) {
             console.log("err", err);
 			res.status(500).json({"err":err});
         }
-        res.status(200).json(docs[0].docDate);
+        if(docs.length > 1)
+            res.status(200).json(docs[0].docDate);
+        else
+            res.status(200).json("01 March 2003");
     });
 });
 

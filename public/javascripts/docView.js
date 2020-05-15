@@ -103,7 +103,7 @@ function buildDocView(data, divName, isPrimary,isScrap,isAnalyst,isBookMark){
 		}
 		else if(isAnalyst){
 			newdiv.innerHTML = "<span style=\"float:right\"><span id = 'getDocLinks' class = 'get-doc-graphs'> <i class='icon-chevron-right'></i> </span></span>" + 
-					"<span><span class = 'bookmarkButton btn btn-default btn-xs'><i class='icon-bookmark'></i></button></span>" +
+					// "<span><span class = 'bookmarkButton btn btn-default btn-xs'><i class='icon-bookmark'></i></button></span>" +
 					"<para> <b> " + this.docID + ":</b> " + this.docText + " <br>";
 		}
 		else if(isBookMark){
@@ -418,7 +418,7 @@ function buildDocView(data, divName, isPrimary,isScrap,isAnalyst,isBookMark){
 
 	if(isAnalyst){
 		buildGetDocLinks();
-		buildBookmarkView();
+		// buildBookmarkView();
 	}
 
 	if(isBookMark){
@@ -445,102 +445,14 @@ function buildDocView(data, divName, isPrimary,isScrap,isAnalyst,isBookMark){
 	}
 }
 
-function nonEntityHiglight(divName,isBookmark){
-	$("#"+divName).click(function(e) {
-		e.stopPropagation();
-        try {
-            s = window.getSelection();
-            var range = s.getRangeAt(0);
-            var node = s.anchorNode;
-            while (range.toString().indexOf(' ') != 0 && range.toString().indexOf('[') != 0) {
-                range.setStart(node, (range.startOffset - 1));
-            }
-            range.setStart(node, range.startOffset + 1);
-            do {
-                if (range.toString().indexOf(',') != -1) {
-                    range.setEnd(node, range.endOffset - 1);
-                    break;
-                }
-                if (range.toString().indexOf(':') != -1) {
-                    range.setEnd(node, range.endOffset - 1);
-                    break;
-                }
-                if (range.toString().indexOf("'") != -1) {
-                    range.setEnd(node, range.endOffset - 1);
-                    break;
-                }
-                if (range.toString().indexOf('.') != -1) {
-                    range.setEnd(node, range.endOffset - 1);
-                    break;
-                }
-                if (range.toString().indexOf(';') != -1) {
-                    range.setEnd(node, range.endOffset - 1);
-                    break;
-                }
-                if (range.toString().indexOf(']') != -1) {
-                    range.setEnd(node, range.endOffset - 1);
-                    break;
-                }
-                if (range.toString().indexOf('/') != -1) {
-                    range.setEnd(node, range.endOffset - 1);
-                    break;
-                }
-                if (range.toString().indexOf(' ') != -1) {
-                    range.setEnd(node, range.endOffset - 2);
-                    break;
-                }
-                range.setEnd(node, range.endOffset + 1);
-            } while (range.toString().indexOf(' ') == -1 && range.toString().trim() != '');
-            var str = range.toString().trim();
-            str = str.replace(/\b[-.,()&#!\[\]{}"']+\B|\B[-.,()&#!\[\]{}"']+\b/g, '');
-            
-            var clicked = e.target;
-            var currentID = clicked.id || (clicked.parentElement.id) || (clicked.parentElement.parentElement.id) ;
-            
-    		if(stop_words.indexOf(str) !== -1){
-    			alert("stop word");
-    		}
-    		else{
-    		
-    		$("#"+divName).highlight(str, {className:'highlighted '+str});
-    		
-    		var elementPos = queue.map(function(x) {return x.selection; }).indexOf(str);
-    		
-    		if(elementPos == -1){
-    		queue.push({
-    			selection : str,
-    			classname : 'highlighted '+str,
-    			docID : currentID,
-    			Type : "nonEntity"
-    				});
-    		}
-    		
-    		if(queue.length >= 3){
-    			var temp = queue.shift();
-    			var cls = temp.classname;
-    			cls = cls.split(" ");
-    			if($('#'+temp.docID).find('.'+cls[1]).hasClass('ent_highlighted')){
-						$('#'+temp.docID).find('.'+cls[1]).removeClass('ent_highlighted');
-					
-    			}
-    			else{
-    				$('#'+temp.docID).unhighlight({className : cls[1]});
-    			}
-    			}
-    		}
-    		
-            $('.highlighted').click(function(e) {
-            	e.stopPropagation();
-    			var elementPos = queue.map(function(x) {return x.selection; }).indexOf($(this).text());
-    			queue.splice(elementPos,1);
-    			$("#"+divName).unhighlight({className:$(this).text().split(" ")[0]});
-            });
-        } 
-        catch (e) {
-        }
-    });
+function buildGetDocLinks(){
+	$(".get-doc-graphs").click(function(){
+		var docId = $(this).parent().parent().attr("id");
+		visualizedDocId.push(docId);
+		getLinks(false);
+		//getDocLinks(visualizedDocId);
+	});
 }
-
 
 /******* End of File *************/
 
@@ -593,76 +505,3 @@ function populateNewWorkerView(docIndex){
 
 	workerDocCount++;
 }
-
-/* function populateTable() {
-	document.getElementById('WorkerInstructions').innerHTML = '<b>Instruction: </b>Select two terms and click \'Generate\' to create a link';
-    //document.getElementById('userList').empty();
-    
-    var Loc ;
-    var Per ;
-    var Org;
-    var Mon;
-    var Mis;
-	var Pho ;
-	var id ;
-	
-	$.getJSON('/users/assignment',function(data){	
-	
-    	$.each(data,function(data){
-			currentCursor = this.Index;
-			inputCursor = this.Index;
-			if(currentCursor >= 39){
-				currentCursor = 1;
-			}
-			else{
-				currentCursor += 3;
-			}
-			Update();
-			Fill();
-		});
-    });
-}; */
-
-/* $("#nextButton").click(function(){
-	if(count<=2){
-	if(confirm("Are you sure you want to proceed to the next primary document?\nYou will not be able to retutn to this document again.")){
-		$("#frequentList").empty();
-		linkCreationCount=0;
-			
-			Fill();
-			document.getElementById('WorkerInstructions').innerHTML = '<b>Instruction: </b>Select two terms and click \'Generate\' to create a link';
-	}
-	}
-	
-	else{
-		alert("Document limit reached!!!");
-		document.getElementById("WorkerInstructions").innerHTML = "Please click 'FINISH' button located in the top right corner of the page to submit your work and receive unique code."
-		$("#nextButton").hide();
-	}
-	selectionWords="";
-});
- */
-/* function Fill() {
-	
-	count++;
-	$.getJSON( "/users/getDocByIndex/"+inputCursor, function( data ) {
-		buildDocView(data,'userList',true,false);
-	});
-	
-	inputCursor++;
-	if(inputCursor >= 41){
-	inputCursor = 1;
-	}
-}; */
-
-/* function Update(){
-	$.ajax({
-					type: 'POST',
-					dataType: 'application/x-www-form-url',
-					data: {
-						"CurrentIndex" : inputCursor,
-						"Index": currentCursor
-					},
-					url: '/users/updateCursor',
-					});
-}; */
