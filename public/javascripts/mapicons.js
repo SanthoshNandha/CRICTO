@@ -1,3 +1,8 @@
+/* 
+	*Author: Santhosh Nandhakumar
+	*emailid: nsanthosh2409@gmail.com
+*/
+
 var PersonIcon = L.icon({
 	iconUrl: "/img/entities/Person.png",
 	shadowUrl: "/img/entities/Person.png",

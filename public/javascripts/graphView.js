@@ -1,3 +1,8 @@
+/* 
+	*Author: Santhosh Nandhakumar
+	*emailid: nsanthosh2409@gmail.com
+*/
+
 var PersonType=true,DateType=true,LocationType=true,OrganizationType=true,MoneyType=true,
 PhoneType=true,MiscType=true,nonEntityType=true,description=true,nodeText=true; pathLabel=true;
 
@@ -1371,7 +1376,6 @@ function createForceDirectedGraph(){
 		 return "inline"; 
 	  });
 	  
-	  console.log("validNodes 2 -- " + validNodes);
 	  node.style("display", function(d) {
 		  if(validNodes.length == 0){
 			  return "none";
@@ -1388,7 +1392,5 @@ function createForceDirectedGraph(){
 			  } 
 		  }
 	  });
-	  
-		  
   }
 }

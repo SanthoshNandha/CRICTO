@@ -1,4 +1,10 @@
+/* 
+	*Author: Santhosh Nandhakumar
+	*emailid: nsanthosh2409@gmail.com
+*/
+
 function startTimeLine(timeSeriesChart){
+
 	d3.select("#naviBand").remove();
 	d3.select("#mainBand").remove();
 	
@@ -17,6 +23,7 @@ function startTimeLine(timeSeriesChart){
         .tooltips("mainBand")
         .brush("naviBand", ["mainBand"])
         .redraw();
+
 }
 
 function timeline() {
@@ -37,9 +44,6 @@ function timeline() {
         bandY = 0,       // Y-Position of the next band
         bandNum = 0;     // Count of bands for ids
    
-    var chart;
-    var svg;
-    
     var tip = d3.tip()
 	  .attr('class', 'd3-tip')
 	  .offset([-10, 0])
@@ -63,37 +67,37 @@ function timeline() {
 	    var targetClassName = (((d.targetNode).replace(/[^\w\s]/gi, '')).split(' ').join('_'));
 	      
 			
-	      d3.select(".forceLink._" + sourceClassName + "._"+targetClassName).style("stroke",function(d){
-	    	  var stroke = currentColor == "none" ? getLinkStroke(d,"linecolor") : currentColor;
-	    		d.currentStroke = stroke;
-	    		return stroke;
-	      });
-	      d3.selectAll(".forceNode._"+sourceClassName).style("stroke",function(d){
-				d.currentStroke = currentColor == "none" ? "gray" : currentColor;
-				return d.currentStroke;
-		 });
-	     d3.selectAll(".forceNode._"+targetClassName).style("stroke",function(d){
-				d.currentStroke = currentColor == "none" ? "gray" : currentColor;
-				return d.currentStroke;
-			});
+        d3.select(".forceLink._" + sourceClassName + "._"+targetClassName).style("stroke",function(d){
+            var stroke = currentColor == "none" ? getLinkStroke(d,"linecolor") : currentColor;
+            d.currentStroke = stroke;
+            return stroke;
+        });
+
+        d3.selectAll(".forceNode._"+sourceClassName).style("stroke",function(d){
+            d.currentStroke = currentColor == "none" ? "gray" : currentColor;
+            return d.currentStroke;
+        });
+
+        d3.selectAll(".forceNode._"+targetClassName).style("stroke",function(d){
+            d.currentStroke = currentColor == "none" ? "gray" : currentColor;
+            return d.currentStroke;
+        });
 	    
-			d3.selectAll(".map-marker._"+sourceClassName+"._"+targetClassName).style("stroke",function(){
-				var stroke = currentColor == "none" ? "black" : currentColor;
-				return stroke;
-			});
+        d3.selectAll(".map-marker._"+sourceClassName+"._"+targetClassName).style("stroke",function(){
+            var stroke = currentColor == "none" ? "black" : currentColor;
+            return stroke;
+        });
 			
-			d3.select(element).style("stroke",currentColor);
-			
-			d3.selectAll(".mainBand._"+ sourceClassName+"._" + targetClassName).style("stroke",currentColor);
-			
-			$(window).trigger("mouseup");
+        d3.select(element).style("stroke",currentColor);        
+        d3.selectAll(".mainBand._"+ sourceClassName+"._" + targetClassName).style("stroke",currentColor);        
+        $(window).trigger("mouseup");
+
     };
     
     function onMouseOverLinking(d){
     	
     	var sourceClassName = (((d.sourceNode).replace(/[^\w\s]/gi, '')).split(' ').join('_'));
 	    var targetClassName = (((d.targetNode).replace(/[^\w\s]/gi, '')).split(' ').join('_'));
-	    
 	    
 	    d3.select(".forceLink._" + sourceClassName + "._"+targetClassName)
 	    	.style("stroke-width",function(d){
@@ -130,13 +134,13 @@ function timeline() {
 			.attr("r", 16)
 			.style("stroke-width",3);
 		
-		
 		d3.select(".map-marker._"+sourceClassName+"._"+targetClassName)
 			.attr("r", 4)
 			.style("stroke-width", 1)
 			.transition()
 			.attr("r", 7)
-			.style("stroke-width", 2);
+            .style("stroke-width", 2);
+            
     }
     
     function onMouseOutLinking(d){
@@ -294,27 +298,16 @@ function timeline() {
                 item.instant = false;
             }
             
-            // The timeline never reaches into the future.
-            // This is an arbitrary decision.
-            // Comment out, if dates in the future should be allowed.
-            //if (item.end > today) { item.end = today};
         });
         
-//        d3.time.month.offset(d3.min(data.items, function (d) { return d.start; }), -6);
-//        d3.time.month.offset(d3.min(data.items, function (d) { return d.end; }), +6);
+//      d3.time.month.offset(d3.min(data.items, function (d) { return d.start; }), -6);
+//      d3.time.month.offset(d3.min(data.items, function (d) { return d.end; }), +6);
 
         calculateTracks(data.items, "descending", "backward");
         data.nTracks = tracksInfo.length;
         
-       /* data.minDate = d3.min(data.items, function (d) { return d.start; });
-        data.maxDate = d3.max(data.items, function (d) { return d.end; });*/
-        
         data.minDate = d3.time.month.offset(d3.min(data.items, function (d) { return d.start; }), -6);
         data.maxDate = d3.time.month.offset(d3.max(data.items, function (d) { return d.end; }), +6);
-        
-        /*minDate = d3.min(data.items, function (d) { return d.start; });
-        maxDate = d3.max(data.items, function (d) { return d.end; });*/
-        
         
         minDate = d3.time.month.offset(d3.min(data.items, function (d) { return d.start; }), -6);
         maxDate = d3.time.month.offset(d3.max(data.items, function (d) { return d.end; }), +6);
@@ -353,9 +346,6 @@ function timeline() {
 			band.circleRadius = band.trackHeight/2;
 		}
 		
-		//band.trackHeight = Math.min((band.h - band.trackOffset) / data.nTracks, 15);
-        
-        
         band.parts = [],
         band.instantWidth = 100; // arbitray value
 
@@ -365,7 +355,6 @@ function timeline() {
 
         band.yScale = function (track) {
            return band.trackOffset + track * band.trackHeight;
-        	//return (band.trackOffset + band.trackHeight) * track
         };
 
         
@@ -424,11 +413,11 @@ function timeline() {
              });
             // .style("display","none");
        
-       band.items = items;
+        band.items = items;
 
-      var intervals = d3.select("#band" + bandNum).selectAll(".interval");
+        var intervals = d3.select("#band" + bandNum).selectAll(".interval");
       
-      intervals.append("rect")
+        intervals.append("rect")
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("class",function(d){
@@ -440,36 +429,36 @@ function timeline() {
         		toggleStroke(d,d3.select(this).style("stroke"));
         	});
      
-    var instants = d3.select("#band" + bandNum).selectAll(".instant");
+        var instants = d3.select("#band" + bandNum).selectAll(".instant");
         
-    if(isMain){
-    	instants.append("circle")
-    	.attr("class",function(d){
-    		return bandName + " instants _" + ((d.sourceNode).replace(/[^\w\s]/gi, '')).split(' ').join('_') + " _" + ((d.targetNode).replace(/[^\w\s]/gi, '')).split(' ').join('_');
-    	})
-        .attr("cx", band.itemHeight / 2)
-  		.attr("cy", band.itemHeight / 2)
-        .attr("r", band.circleRadius)
-        .style("opacity", .8)
-        .style("stroke-width","1")
-        .on("click",function(d){
-    		toggleStroke(d,d3.select(this).style("stroke"),this);
-    	});
-    }
-    else{
-    	instants.append("circle")
-    	.attr("class",function(d){
-    		return bandName + " instants _" + ((d.sourceNode).replace(/[^\w\s]/gi, '')).split(' ').join('_') + " _" + ((d.targetNode).replace(/[^\w\s]/gi, '')).split(' ').join('_');
-    	})
-        .attr("cx", band.itemHeight / 2)
-  		.attr("cy", band.itemHeight / 2)
-        .attr("r", band.circleRadius)
-        .style("opacity", .8)
-        .style("stroke-width","1")
-        .on("click",function(d){
-    		toggleStroke(d,d3.select(this).style("stroke"),this);
-    	});
-    }
+        if(isMain){
+            instants.append("circle")
+            .attr("class",function(d){
+                return bandName + " instants _" + ((d.sourceNode).replace(/[^\w\s]/gi, '')).split(' ').join('_') + " _" + ((d.targetNode).replace(/[^\w\s]/gi, '')).split(' ').join('_');
+            })
+            .attr("cx", band.itemHeight / 2)
+            .attr("cy", band.itemHeight / 2)
+            .attr("r", band.circleRadius)
+            .style("opacity", .8)
+            .style("stroke-width","1")
+            .on("click",function(d){
+                toggleStroke(d,d3.select(this).style("stroke"),this);
+            });
+        }
+        else{
+            instants.append("circle")
+            .attr("class",function(d){
+                return bandName + " instants _" + ((d.sourceNode).replace(/[^\w\s]/gi, '')).split(' ').join('_') + " _" + ((d.targetNode).replace(/[^\w\s]/gi, '')).split(' ').join('_');
+            })
+            .attr("cx", band.itemHeight / 2)
+            .attr("cy", band.itemHeight / 2)
+            .attr("r", band.circleRadius)
+            .style("opacity", .8)
+            .style("stroke-width","1")
+            .on("click",function(d){
+                toggleStroke(d,d3.select(this).style("stroke"),this);
+            });
+        }
      
         band.addActions = function(actions) {
             actions.forEach(function (action) {
@@ -478,13 +467,13 @@ function timeline() {
         };
 
         band.redraw = function () {
-        	var tracksInfo =[];
-        	
-        	if(isMain){
-        		items.data().forEach(function(item) {
-            		if(item != undefined){
-            			item.start = item.start;
-            			var startDateX = band.xScale(item.start);
+            var tracksInfo =[];
+            
+            if(isMain){
+                items.data().forEach(function(item) {
+                    if(item != undefined){
+                        item.start = item.start;
+                        var startDateX = band.xScale(item.start);
                         item.graphStart = band.xScale.invert(startDateX - 5);
                         
                         if (item.instant) {
@@ -496,54 +485,54 @@ function timeline() {
                             var endDateX = band.xScale(item.end);
                             item.graphEnd = band.xScale.invert(endDateX + 1);
                         }
-            		};
+                    };
                 });
-                	
-            	items.data().forEach(function(item){
-                		outerloop:
-                		for(i = 0; i < tracksInfo.length; i++){
-                			innerloop:
-                			for(var j=0; j < tracksInfo[i].length; j++){
-                					if(item.graphStart >= tracksInfo[i][j].start && item.graphStart <= tracksInfo[i][j].end ){
-                            			continue outerloop ;
-                            		}
-                            		else if(item.graphEnd >= tracksInfo[i][j].start && item.graphEnd <= tracksInfo[i][j].end){
-                            			continue outerloop ;
-                            		}
-                            		else if(item.graphStart <= tracksInfo[i][j].start && item.graphEnd >= tracksInfo[i][j].end){
-                            			continue outerloop;
-                            		}
-                			}
-                			break outerloop;
-                		}
-                		item.track = i;
-                		if(tracksInfo[i] == undefined)
-                			tracksInfo[i] = [{"start": item.graphStart, "end" : item.graphEnd}];
-                		else
-                			tracksInfo[i].push({"start": item.graphStart, "end" : item.graphEnd});
-                	});
-        	}
-        	
-        	items
-                .attr("x", function (d) { 
-                	return band.xScale(d.start);
-                })
-                .attr("y", function (d) { 
-                	return band.yScale(d.track); 
-                })
-                .attr("width", function (d) {
-                    return ((band.xScale(d.end) - band.xScale(d.start)) < 4) ? 4 : band.xScale(d.end) - band.xScale(d.start); 
-                 });
-        	
-        	band.parts.forEach(function(part) { 
-        		part.redraw(); 
-        	})
+                    
+                items.data().forEach(function(item){
+                    outerloop:
+                    for(i = 0; i < tracksInfo.length; i++){
+                        innerloop:
+                        for(var j=0; j < tracksInfo[i].length; j++){
+                                if(item.graphStart >= tracksInfo[i][j].start && item.graphStart <= tracksInfo[i][j].end ){
+                                    continue outerloop ;
+                                }
+                                else if(item.graphEnd >= tracksInfo[i][j].start && item.graphEnd <= tracksInfo[i][j].end){
+                                    continue outerloop ;
+                                }
+                                else if(item.graphStart <= tracksInfo[i][j].start && item.graphEnd >= tracksInfo[i][j].end){
+                                    continue outerloop;
+                                }
+                        }
+                        break outerloop;
+                    }
+                    item.track = i;
+                    if(tracksInfo[i] == undefined)
+                        tracksInfo[i] = [{"start": item.graphStart, "end" : item.graphEnd}];
+                    else
+                        tracksInfo[i].push({"start": item.graphStart, "end" : item.graphEnd});
+                });
+            }
+            
+            items
+            .attr("x", function (d) { 
+                return band.xScale(d.start);
+            })
+            .attr("y", function (d) { 
+                return band.yScale(d.track); 
+            })
+            .attr("width", function (d) {
+                return ((band.xScale(d.end) - band.xScale(d.start)) < 4) ? 4 : band.xScale(d.end) - band.xScale(d.start); 
+            });
+            
+            band.parts.forEach(function(part) { 
+                part.redraw(); 
+            })
         };
 
         bands[bandName] = band;
         components.push(band);
-        // Adjust values for next band
-       // bandY += band.h + bandGap;
+        //Adjust values for next band
+        //bandY += band.h + bandGap;
         bandNum += 1;
 
         return timeline;
@@ -604,12 +593,12 @@ function timeline() {
         var mainband = bands["mainBand"];
         var naviBand = bands["naviBand"];
         var axis = d3.svg.axis()
-            	.scale(mainband.xScale)
-            	.orient(orientation || "bottom")
-            	.tickSize(3, 0)
-            	//.ticks(5)
-            	//.ticks(d3.time.months,1);
-            	.tickFormat(customTimeFormat);
+            .scale(mainband.xScale)
+            .orient(orientation || "bottom")
+            .tickSize(3, 0)
+            //.ticks(5)
+            //.ticks(d3.time.months,1);
+            .tickFormat(customTimeFormat);
 
         var xAxis = naviBand.svg.append("g")
             .attr("class", "axis")

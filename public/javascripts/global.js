@@ -124,7 +124,6 @@ $(document).ready(function() {
 			visualizedWorkerId.push(userId);
 
 			$.get("users/get/" + sessionStorage.getItem('userId') , function(data){
-				console.log(data);
 				link_no = data.links.length;
 				showMainPage();
 				getLinks(false);
