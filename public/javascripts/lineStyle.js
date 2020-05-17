@@ -1,3 +1,8 @@
+/* 
+	*Author: Santhosh Nandhakumar
+	*emailid: nsanthosh2409@gmail.com
+*/
+
 var entitySelectDialog;
 var selectedEntityNo = 0;
 var lineStyleData = [] ;
@@ -8,11 +13,11 @@ var grid;
 $(document).ready(function() {
 	
 	entitySelectDialog = $( "#entitySelect" ).dialog({
-	      autoOpen: false,
-	      height: 409,
-	      width: 285,
-	      modal: true,
-	      buttons: {	
+		autoOpen: false,
+		height: 409,
+		width: 285,
+		modal: true,
+		buttons: {	
 	    	"Add": function(){
 	    		var selectedVal = $( "#singleEntitySlect" ).val();
 	    		if(selectedEntityNo == 1){
@@ -27,18 +32,16 @@ $(document).ready(function() {
 	    		
 	    		entitySelectDialog.dialog( "close" );
 	    	},
-		close: function() {
-			form[ 0 ].reset();
-			entitySelectDialog.dialog( "close" );
-  }
-	      }
+			close: function() {
+				form[ 0 ].reset();
+				entitySelectDialog.dialog( "close" );
+			}
+		}
 	      
 	});
 	
 	$("#lineColourSelect").children().prop('disabled','disabled');
 	$("#lineStrokeSelect").children().prop('disabled','disabled');
-	
-	
 	
 	$("#entity1Single").click(function(){
 		var entity = $("#entity1Select").val();
@@ -47,19 +50,20 @@ $(document).ready(function() {
 			openSelectSingleDialog(entity, 1);
 		}	
 	});
+
 	$("#entity2Single").click(function(){
 		var entity = $("#entity2Select").val();
 		if(entity != ""){
-		selectedEntityNo = 2;
-		openSelectSingleDialog(entity,2);
+			selectedEntityNo = 2;
+			openSelectSingleDialog(entity,2);
 		}
-	
 	});
+
 	$("#entity3Single").click(function(){
 		var entity = $("#entity3Select").val();
 		if(entity != ""){
-		selectedEntityNo = 3;
-		openSelectSingleDialog(entity,3);
+			selectedEntityNo = 3;
+			openSelectSingleDialog(entity,3);
 		}
 
 	});
@@ -116,138 +120,138 @@ $(document).ready(function() {
 	
 	$("#addLineStyle").click(function(){
 		  
-		  var lineStyles = {};
-		  lineStyles["id"] = ++no_of_styles + "" + new Date().getTime();
-		  lineStyles["isOneSingle"] = false;
-		  lineStyles["isTwoSingle"] = false;
-		  lineStyles["isThreeSingle"] = false;
-		  lineStyles["noOfSingle"] = 0;	
+		var lineStyles = {};
+		lineStyles["id"] = ++no_of_styles + "" + new Date().getTime();
+		lineStyles["isOneSingle"] = false;
+		lineStyles["isTwoSingle"] = false;
+		lineStyles["isThreeSingle"] = false;
+		lineStyles["noOfSingle"] = 0;	
+		
+		var selectedEntity1;
+		var selectedEntity2;
+		var selectedEntity3;
 		  
-		  var selectedEntity1;
-		  var selectedEntity2;
-		  var selectedEntity3;
 		  
-		  
-		  if($("#entity1Select").val() != ""){
-			  
-			  selectedEntity1 = $("#entity1Select").val();
-			  if($("input:radio[name=entity1]:checked").val() == "All"){
-				  lineStyles["entityOne"] = $("#entity1Select").val();
-			  }
-			  else{
-				  lineStyles["entityOne"] = $("#entity1Select").val();
-				  lineStyles["isOneSingle"] = true;
-				  lineStyles["singleOne"] = $("#entity1SingleValue").html();
-				  lineStyles["noOfSingle"] = lineStyles["noOfSingle"] + 1;
-			  }
-		  }
-		  if($("#entity2Select").val() != ""){
-			  selectedEntity2 = $("#entity2Select").val();
-			  
-			  if($("input:radio[name=entity2]:checked").val() == "All"){
-				  lineStyles["entityTwo"] = $("#entity2Select").val();
-			  }
-			  else{
-				  lineStyles["entityTwo"] = $("#entity2Select").val();
-				  lineStyles["isTwoSingle"] = true;
-				  lineStyles["singleTwo"] = $("#entity2SingleValue").html();
-				  lineStyles["noOfSingle"] = lineStyles["noOfSingle"] + 1;
-			  }
-			  
-			  if(selectedEntity1 == "Miscellaneous"){
-				  selectedEntity1 = "Misc";
-			  }
-			  if(selectedEntity1 == "Non-Entity"){
-				  selectedEntity1 = "nonEntity";
-			  }
-			  if(selectedEntity2 == "Miscellaneous"){
-				  selectedEntity2 = "Misc";
-			  }
-			  if(selectedEntity2 == "Non-Entity"){
-				  selectedEntity2 = "nonEntity";
-			  }
-			  
-			  lineStyles["combinationID1"] = entityCombinationArray[getEntityIdentifier(selectedEntity1)][getEntityIdentifier(selectedEntity2)];
-		  }
-		  if($("#entity3Select").val() != ""){
-			  selectedEntity3 = $("#entity3Select").val();
-			  if($("input:radio[name=entity3]:checked").val() == "All"){
-				  lineStyles["entityThree"] = $("#entity3Select").val();
-			  }
-			  else{
-				  lineStyles["entityThree"] = $("#entity3Select").val();
-				  lineStyles["isThreeSingle"] = true;
-				  lineStyles["singleThree"] = $("#entity3SingleValue").html();
-				  lineStyles["noOfSingle"] = lineStyles["noOfSingle"] + 1;
-			  }
-			  
-			  if(selectedEntity3 == "Miscellaneous"){
-				  selectedEntity3 = "Misc";
-			  }
-			  if(selectedEntity3 == "Non-Entity"){
-				  selectedEntity3 = "nonEntity";
-			  }
-			  lineStyles["combinationID2"] = entityCombinationArray[getEntityIdentifier(selectedEntity2)][getEntityIdentifier(selectedEntity3)];
-		  }
+		if($("#entity1Select").val() != ""){
+			
+			selectedEntity1 = $("#entity1Select").val();
+			if($("input:radio[name=entity1]:checked").val() == "All"){
+				lineStyles["entityOne"] = $("#entity1Select").val();
+			}
+			else{
+				lineStyles["entityOne"] = $("#entity1Select").val();
+				lineStyles["isOneSingle"] = true;
+				lineStyles["singleOne"] = $("#entity1SingleValue").html();
+				lineStyles["noOfSingle"] = lineStyles["noOfSingle"] + 1;
+			}
+		}
+		if($("#entity2Select").val() != ""){
+			selectedEntity2 = $("#entity2Select").val();
+			
+			if($("input:radio[name=entity2]:checked").val() == "All"){
+				lineStyles["entityTwo"] = $("#entity2Select").val();
+			}
+			else{
+				lineStyles["entityTwo"] = $("#entity2Select").val();
+				lineStyles["isTwoSingle"] = true;
+				lineStyles["singleTwo"] = $("#entity2SingleValue").html();
+				lineStyles["noOfSingle"] = lineStyles["noOfSingle"] + 1;
+			}
+			
+			if(selectedEntity1 == "Miscellaneous"){
+				selectedEntity1 = "Misc";
+			}
+			if(selectedEntity1 == "Non-Entity"){
+				selectedEntity1 = "nonEntity";
+			}
+			if(selectedEntity2 == "Miscellaneous"){
+				selectedEntity2 = "Misc";
+			}
+			if(selectedEntity2 == "Non-Entity"){
+				selectedEntity2 = "nonEntity";
+			}
+			
+			lineStyles["combinationID1"] = entityCombinationArray[getEntityIdentifier(selectedEntity1)][getEntityIdentifier(selectedEntity2)];
+		}
+
+		if($("#entity3Select").val() != ""){
+			selectedEntity3 = $("#entity3Select").val();
+			if($("input:radio[name=entity3]:checked").val() == "All"){
+				lineStyles["entityThree"] = $("#entity3Select").val();
+			}
+			else{
+				lineStyles["entityThree"] = $("#entity3Select").val();
+				lineStyles["isThreeSingle"] = true;
+				lineStyles["singleThree"] = $("#entity3SingleValue").html();
+				lineStyles["noOfSingle"] = lineStyles["noOfSingle"] + 1;
+			}
+			
+			if(selectedEntity3 == "Miscellaneous"){
+				selectedEntity3 = "Misc";
+			}
+			if(selectedEntity3 == "Non-Entity"){
+				selectedEntity3 = "nonEntity";
+			}
+			lineStyles["combinationID2"] = entityCombinationArray[getEntityIdentifier(selectedEntity2)][getEntityIdentifier(selectedEntity3)];
+		}
 		 
 		  
-		  //var color =  $("#colourSelect").val();
-		  var color = $("#lineColourSelected").css( "background-color" );
-		  var lineStyle ;
-		  var lineStyleImage = $("#lineStorkeSelected").css( "background-image" );
+		//var color =  $("#colourSelect").val();
+		var color = $("#lineColourSelected").css( "background-color" );
+		var lineStyle ;
+		var lineStyleImage = $("#lineStorkeSelected").css( "background-image" );
+		
+		lineStyleImage = ((lineStyleImage.split("/")[5]).split("."))[0];
+		
+		if(lineStyleImage == "10"){
+			lineStyle = "1 0";
+		}
+		if(lineStyleImage == "22"){
+			lineStyle = "2 2";
+		}
+			
+		if(lineStyleImage == "63"){
+			lineStyle = "6 3";
+		}
+			
+		if(lineStyleImage == "8343"){
+			lineStyle = "8 3 4 3";
+		}
+		if(lineStyleImage == "6828"){
+			lineStyle = "6 8 2 8";
+		}
+
 		  
-		  lineStyleImage = ((lineStyleImage.split("/")[5]).split("."))[0];
+		lineStyles["linecolor"] = color;
+		lineStyles["lineStyle"] = lineStyle;
+		lineStyles["lineStyleBgImage"] = lineStyleImage;
 		  
-		  if(lineStyleImage == "10"){
-			  lineStyle = "1 0";
-		  }
-		  if(lineStyleImage == "22"){
-			  lineStyle = "2 2";
-		  }
-			  
-		   if(lineStyleImage == "63"){
-			   lineStyle = "6 3";
-		   }
-			 
-		  if(lineStyleImage == "8343"){
-			  lineStyle = "8 3 4 3";
-		  }
-		   if(lineStyleImage == "6828"){
-			  lineStyle = "6 8 2 8";
-		   }
-//		  else 
-//			  lineStyle = "1 0";
+		// dataView.addItem(lineStyles);
 		  
-		  lineStyles["linecolor"] = color;
-		  lineStyles["lineStyle"] = lineStyle;
-		  lineStyles["lineStyleBgImage"] = lineStyleImage;
-		  
-		 // dataView.addItem(lineStyles);
-		  
-		  $.ajax({
-				type: 'POST',
-				dataType: 'application/x-www-form-url',
-				data: {
-						"analystID" : workerId,
-						"style" : JSON.stringify(lineStyles)
-				},
-				url: '/users/addLineStyle',
-				async: false,
-				complete : function(data){
-					loadLineStyleTable(workerId);
-					getLinks(false);
-					/*console.log("selects -- " + selects);
-					if(!(selects == null || selects == undefined || selects == ""))
-						getWorkersLinks(selects+","+workerId);*/
-					}
-			});
+		$.ajax({
+			type: 'POST',
+			dataType: 'application/x-www-form-url',
+			data: {
+					"analystID" : workerId,
+					"style" : JSON.stringify(lineStyles)
+			},
+			url: '/users/addLineStyle',
+			async: false,
+			complete : function(data){
+				loadLineStyleTable(workerId);
+				getLinks(false);
+				/*console.log("selects -- " + selects);
+				if(!(selects == null || selects == undefined || selects == ""))
+					getWorkersLinks(selects+","+workerId);*/
+				}
+		});
+
 	  	$("#entity1Select").prop('selectedIndex',0);
 	  	$("#entity2Select").prop('selectedIndex',0);
 	  	$("#entity3Select").prop('selectedIndex',0);
 	  	
 	  	$("#entity2Select").attr('disabled','disabled');
 	  	$("#entity3Select").attr('disabled','disabled');
-
 
 	  	$("#entity1SingleValue").html("");
 	  	$("#entity2SingleValue").html("");
@@ -256,10 +260,8 @@ $(document).ready(function() {
 	  	$('input:radio[name=entity1]')[1].checked = true;
 	  	$('input:radio[name=entity2]')[1].checked = true;
 	  	$('input:radio[name=entity3]')[1].checked = true;
-	  	
-	  	
 		  
-	  });
+	});
 	
 	
 	$("#lineColorSelectButton").click(function(){
@@ -273,6 +275,7 @@ $(document).ready(function() {
 		}
 		
 	});
+
 	$("#lineStrokeSelectButton").click(function(){
 		if($("#lineStrokeSelectOptions").hasClass("line-stroke-select-options-show")){
 		    $("#lineStrokeSelectOptions").addClass("line-stroke-select-options-hide");
@@ -284,30 +287,36 @@ $(document).ready(function() {
 		}
 		
 	});
+
 	$("#lineColorBlue").click(function(){
 		$("#lineColourSelected").css("background-color", "blue");
 		$("#lineColorSelectOptions").addClass("line-color-select-options-hide");
 	    $("#lineColorSelectOptions").removeClass("line-color-select-options-show");
 	    
 	});
+
 	$("#lineColorGreen").click(function(){
+
 		$("#lineColourSelected").css("background-color", "Green");
 		$("#lineColorSelectOptions").addClass("line-color-select-options-hide");
 	    $("#lineColorSelectOptions").removeClass("line-color-select-options-show");
 	    
 	});
+
 	$("#lineColorBrown").click(function(){
 		$("#lineColourSelected").css("background-color", "Brown");
 		$("#lineColorSelectOptions").addClass("line-color-select-options-hide");
 	    $("#lineColorSelectOptions").removeClass("line-color-select-options-show");
 	    
 	});
+
 	$("#lineColorGold").click(function(){
 		$("#lineColourSelected").css("background-color", "Gold");
 		$("#lineColorSelectOptions").addClass("line-color-select-options-hide");
 	    $("#lineColorSelectOptions").removeClass("line-color-select-options-show");
 	    
 	});
+
 	$("#lineColorPurple").click(function(){
 		$("#lineColourSelected").css("background-color", "Purple");
 		$("#lineColorSelectOptions").addClass("line-color-select-options-hide");
@@ -335,6 +344,7 @@ $(document).ready(function() {
 	    $("#lineStrokeSelectOptions").removeClass("line-stroke-select-options-show");
 	    
 	});
+
 	$("#lineStroke63").click(function(){
 		$("#lineStorkeSelected").css("background-image", "url(/img/lineStyle/63.jpg)");
 		$("#lineStrokeSelectOptions").addClass("line-stroke-select-options-hide");
@@ -348,6 +358,7 @@ $(document).ready(function() {
 	    $("#lineStrokeSelectOptions").removeClass("line-stroke-select-options-show");
 	    
 	});
+
 	$("#lineStroke6828").click(function(){
 		$("#lineStorkeSelected").css("background-image", "url(/img/lineStyle/6828.jpg)");
 		$("#lineStrokeSelectOptions").addClass("line-stroke-select-options-hide");
@@ -390,7 +401,6 @@ function loadLineStyleTable(workerId){
 	
 	$.getJSON('/users/lineStyles/'+workerId, function(data) {
 		processLineStyleData(data[0]);
-		
 	});
 }
 
@@ -423,62 +433,62 @@ function drawLineStyleTable(data){
 		       	    {id: "single3", name: "Entity 3", field: "singleThree", width: 130},
 		       	    {id: "lineColorcol", name: "Color", field: "linecolor", width: 110, formatter:Slick.Formatters.bgColor},
 		       	    {id: "lineStyleCol", name: "Style", field: "lineStyleBgImage", width: 110, formatter:Slick.Formatters.bgImage}
-		       	  ];
+					 ];
+					 
 	var options = {
 		    		rowHeight: 30,
-		  		  };
+		  		};
 	
-	 $(function () {
-		 grid = new Slick.Grid("#lineStylePlace", dataView, columns, options);
-		 
-		 grid.invalidate();
-	     grid.render();
-	     grid.resizeCanvas();
-	     
-		 grid.onClick.subscribe(function (e) {
-		 var cell = grid.getCellFromEvent(e);
-		      
-		      
-		     if (grid.getColumns()[cell.cell].id == "styleDelete") {
-		        if (!grid.getEditorLock().commitCurrentEdit()) {
-		          return;
-		        }
-		        var item = dataView.getItem(cell.row);//RowNum is the number of the row
-		        
-		        var RowID = item.id;
-		        
-		        $.ajax({
-					type: 'POST',
-					dataType: 'application/x-www-form-url',
-					data: {
-							"workerId" : workerId,
-							"id" : Number(item.id),
-					},
-					url: '/users/deleteLineStyle',
-					async: false,
-					complete : function(data){
-						getLinks(false);
-						/*if(!(selects == null || selects == "" || selects == undefined)){
-							getWorkersLinks(selects+","+workerId);
-						}*/							
-					}
-				});
-		        
-		        dataView.deleteItem(RowID);
-		    	grid.invalidate();
-		    	grid.render();
-		    	grid.resizeCanvas();
-		        e.stopPropagation();
-		      }
-		    });
-	 });
+	$(function () {
+		grid = new Slick.Grid("#lineStylePlace", dataView, columns, options);
+		
+		grid.invalidate();
+		grid.render();
+		grid.resizeCanvas();
+		
+		grid.onClick.subscribe(function (e) {
+		var cell = grid.getCellFromEvent(e);
+			
+			
+			if (grid.getColumns()[cell.cell].id == "styleDelete") {
+			if (!grid.getEditorLock().commitCurrentEdit()) {
+				return;
+			}
+			var item = dataView.getItem(cell.row);//RowNum is the number of the row
+			
+			var RowID = item.id;
+			
+			$.ajax({
+				type: 'POST',
+				dataType: 'application/x-www-form-url',
+				data: {
+						"workerId" : workerId,
+						"id" : Number(item.id),
+				},
+				url: '/users/deleteLineStyle',
+				async: false,
+				complete : function(data){
+					getLinks(false);
+					/*if(!(selects == null || selects == "" || selects == undefined)){
+						getWorkersLinks(selects+","+workerId);
+					}*/							
+				}
+			});
+			
+			dataView.deleteItem(RowID);
+			grid.invalidate();
+			grid.render();
+			grid.resizeCanvas();
+			e.stopPropagation();
+			}
+		});
+	});
 	 
-	 grid.invalidate();
-     grid.render();
-     grid.resizeCanvas();
+	grid.invalidate();
+	grid.render();
+	grid.resizeCanvas();
 
-		if($("#graphContainer").hasClass("active")){
-			$("#lineStyleViewContainer").removeClass("active");
-		}
+	if($("#graphContainer").hasClass("active")){
+		$("#lineStyleViewContainer").removeClass("active");
+	}
 }
-	

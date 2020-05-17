@@ -1,3 +1,8 @@
+/* 
+	*Author: Santhosh Nandhakumar
+	*emailid: nsanthosh2409@gmail.com
+*/
+
 function drawMap(data, nodeLocationJson){
 	
 	function getMapStroke(d, style){
@@ -65,26 +70,26 @@ function drawMap(data, nodeLocationJson){
 		var className = ((d.target).replace(/[^\w\s]/gi, '')).split(' ').join('_');
    	 	var locationClassName  = ((d.locationName).replace(/[^\w\s]/gi, '')).split(' ').join('_');
    	 	
-   	 d3.select(".forceLink._" + className + "._"+locationClassName)
-	 	.style("stroke-width",function(d){
-	 		if(d.strokeSize == null){
-	 			return 2;
-	 		}
-	 		else{
-	 			return 2 + (d.strokeSize);
-	 		}
-	 		
-	 	})
-	 	.transition()
-	 	.style("stroke-width",function(d){
-	 		if(d.strokeSize == null){
-	 			return 4;
-	 		}
-	 		else{
-	 			return (2 + (d.strokeSize)) * 1.5 ;
-	 		}
-	 		
-	 	});
+   	 	d3.select(".forceLink._" + className + "._"+locationClassName)
+			.style("stroke-width",function(d){
+				if(d.strokeSize == null){
+					return 2;
+				}
+				else{
+					return 2 + (d.strokeSize);
+				}
+				
+			})
+			.transition()
+			.style("stroke-width",function(d){
+				if(d.strokeSize == null){
+					return 4;
+				}
+				else{
+					return (2 + (d.strokeSize)) * 1.5 ;
+				}
+				
+			});
    	 
 	   	d3.selectAll(".forceNode._"+className)
 			.attr("r", 11)
@@ -131,44 +136,44 @@ function drawMap(data, nodeLocationJson){
 	   		//.style("stoke","black");
 		
 		d3.selectAll(".forceInstance._"+ className + "._"+locationClassName)
-   		.attr("r", 3)
-   		//.style("stroke-width",0.5)
-   		//.style("stoke","none")
-   		.transition()
-		.attr("r", 5)
-		//.style("stroke-width",1);
-   		//.style("stoke","black");
+			.attr("r", 3)
+			//.style("stroke-width",0.5)
+			//.style("stoke","none")
+			.transition()
+			.attr("r", 5)
+			//.style("stroke-width",1);
+			//.style("stoke","black");
 
 	}
 	
-	function onMouseOutLinking(d){
+	function onMouseOutLinking(d){	
 		var className = ((d.target).replace(/[^\w\s]/gi, '')).split(' ').join('_');
    	 	var locationClassName  = ((d.locationName).replace(/[^\w\s]/gi, '')).split(' ').join('_');
    	 	
-   	 d3.select(".forceLink._" + className + "._"+locationClassName)
-	    .style("stroke-width",function(d){
- 		if(d.strokeSize == null){
- 			return 4;
- 		}
- 		else{
- 			return (2 + (d.strokeSize)) * 1.5 ;
- 		}
+   	 	d3.select(".forceLink._" + className + "._"+locationClassName)
+			.style("stroke-width",function(d){
+			if(d.strokeSize == null){
+				return 4;
+			}
+			else{
+				return (2 + (d.strokeSize)) * 1.5 ;
+			}
  		
- 	})
- 	.transition()
- 	.style("stroke-width",function(d){
- 		if(d.strokeSize == null){
- 			return 2;
- 		}
- 		else{
- 			return 2 + (d.strokeSize);
- 		}
+ 		})
+ 		.transition()
+ 		.style("stroke-width",function(d){
+ 			if(d.strokeSize == null){
+ 				return 2;
+ 			}
+			else{
+				return 2 + (d.strokeSize);
+			}
  		
- 	});
+ 		});
 	    
 	    d3.selectAll(".forceNode._"+className)
-		   .attr("r", 16)
-		   .style("stroke-width",3)
+			.attr("r", 16)
+			.style("stroke-width",3)
 			.transition()
 			.attr("r", 11)
 			.style("stroke-width",1.5);
@@ -229,55 +234,58 @@ function drawMap(data, nodeLocationJson){
     	else
     		currentColor = "none";
     	
-    	 var className = ((d.target).replace(/[^\w\s]/gi, '')).split(' ').join('_');
-    	 var locationClassName  = ((d.locationName).replace(/[^\w\s]/gi, '')).split(' ').join('_');
+    	var className = ((d.target).replace(/[^\w\s]/gi, '')).split(' ').join('_');
+    	var locationClassName  = ((d.locationName).replace(/[^\w\s]/gi, '')).split(' ').join('_');
     	 
-			d3.selectAll(".forceNode._"+className).style("stroke",function(d){
-				d.currentStroke = currentColor == "none" ? "gray" : currentColor;
-				return d.currentStroke;
+		d3.selectAll(".forceNode._"+className).style("stroke",function(d){
+			d.currentStroke = currentColor == "none" ? "gray" : currentColor;
+			return d.currentStroke;
+		});
+
+		d3.selectAll(".forceNode._"+locationClassName).style("stroke",function(d){
+			d.currentStroke = currentColor == "none" ? "gray" : currentColor;
+			return d.currentStroke;
+		});
+		
+		d3.select(".forceLink._" + className + "._"+locationClassName).style("stroke",function(d){
+			var stroke = currentColor == "none" ? getLinkStroke(d,"linecolor") : currentColor;
+			d.currentStroke = stroke;
+			return stroke;
 			});
-			d3.selectAll(".forceNode._"+locationClassName).style("stroke",function(d){
-				d.currentStroke = currentColor == "none" ? "gray" : currentColor;
-				return d.currentStroke;
-			});
-			
-			d3.select(".forceLink._" + className + "._"+locationClassName).style("stroke",function(d){
-				var stroke = currentColor == "none" ? getLinkStroke(d,"linecolor") : currentColor;
-	    		d.currentStroke = stroke;
-	    		return stroke;
-		      });
-			
-			d3.selectAll(".mainBand._"+className).style("stroke",function(d){
-				return currentColor;
-			});
-			d3.selectAll(".mainBand._"+locationClassName).style("stroke",function(d){
-				return currentColor;
-			});
-			
-			d3.selectAll(".forceInstance._"+className).style("stroke",function(d){
-				return currentColor;
-			});
-			d3.selectAll(".forceInstance._"+locationClassName).style("stroke",function(d){
-				return currentColor;
-			});
-			
-			d3.selectAll(".map-marker._"+className + " ._"+locationClassName).style("stroke",function(){
-				var stroke = currentColor == "none" ? "black" : currentColor;
-				return stroke;
-			});
-			
-			d3.select(element).style("stroke",function(){
-				var stroke = currentColor == "none" ? "black" : currentColor;
-				return stroke;
-			});
-			
-			$(window).trigger("mouseup");
+		
+		d3.selectAll(".mainBand._"+className).style("stroke",function(d){
+			return currentColor;
+		});
+
+		d3.selectAll(".mainBand._"+locationClassName).style("stroke",function(d){
+			return currentColor;
+		});
+		
+		d3.selectAll(".forceInstance._"+className).style("stroke",function(d){
+			return currentColor;
+		});
+		
+		d3.selectAll(".forceInstance._"+locationClassName).style("stroke",function(d){
+			return currentColor;
+		});
+		
+		d3.selectAll(".map-marker._"+className + " ._"+locationClassName).style("stroke",function(){
+			var stroke = currentColor == "none" ? "black" : currentColor;
+			return stroke;
+		});
+		
+		d3.select(element).style("stroke",function(){
+			var stroke = currentColor == "none" ? "black" : currentColor;
+			return stroke;
+		});
+		
+		$(window).trigger("mouseup");
     	
     };
 	 	
 	function sortByDateAscending(a, b) {
 		return a.date - b.date;
-	 }
+	}
 	
 	var uniqueLocationArray = [];	
 	var latLogArray = [];
@@ -338,7 +346,6 @@ function drawMap(data, nodeLocationJson){
 			textPathArray.push(textPathJson);
 		}
 	});
-	
 	 
 	color.domain([0,outerArray.length]);
 	
@@ -351,16 +358,16 @@ function drawMap(data, nodeLocationJson){
 	var svg = d3.select("#mapPlace").select("svg");
 
 	var tip = d3.tip()
-	  .attr('class', 'd3-tip')
-	  .offset([-10, 0])
-	  .html(function(d) {
-		  if(d.targetType != "Location"){
-			  return "" + d.target +"";
-		  }
-		  else{
-			  return "" + d.locationName +"";
-		  }
-	  });
+		.attr('class', 'd3-tip')
+		.offset([-10, 0])
+		.html(function(d) {
+			if(d.targetType != "Location"){
+				return "" + d.target +"";
+			}
+			else{
+				return "" + d.locationName +"";
+			}
+		});
 	
 	svg.call(tip);
 	
@@ -451,7 +458,7 @@ function drawMap(data, nodeLocationJson){
     		return d.index + "_" + d.node.split(" ").join("_"); 
     	});
    
-   /*textpathDefs.attr("d",function(d){			
+   	/*textpathDefs.attr("d",function(d){			
 		var returnValue;
 		var dx = (map.latLngToLayerPoint(d.sourceLocation).x - map.latLngToLayerPoint(d.targetLocation).x),
 			dy = (map.latLngToLayerPoint(d.sourceLocation).y - map.latLngToLayerPoint(d.targetLocation).y),
@@ -463,7 +470,7 @@ function drawMap(data, nodeLocationJson){
 		return returnValue;
 	});
 	
-   textpathDefs.each(function(d){
+   	textpathDefs.each(function(d){
 		d.pathLength = this.getTotalLength();
 	});*/
     
@@ -493,11 +500,6 @@ function drawMap(data, nodeLocationJson){
 				return zoomLevel * 5;
 			}
 	});
-    
-    /*textPath.each(function(d){    	
-		
-    	console.log("d.textLength -- " + d.textLength);
-	   });*/
     
     update();	
 	mapFilter();
@@ -566,52 +568,53 @@ function drawMap(data, nodeLocationJson){
 		})
 
 		textPath.style("display", function(d) {
-				var zoomLevel = map.getZoom();
-				var length = d.node.length;
-				var textLength;
-				if(zoomLevel != 0)
-					textLength = (length) * 3 * zoomLevel;
-				else{
-					textLength = (length) * 3;
-				}
-				//console.log("zoomLevel -- " + zoomLevel);
-//				console.log("path -- " + Number(d.pathLength) );
-				
-				var flag;
-				flag = (getLinkStroke(d,"linecolor") == "gray");
-				flag = (filter_by_entity("Location")&&filter_by_entity(d.targetType)&&!flag&&(Number(d.pathLength) > textLength));
-			    return flag?"inline":"none";
-		 });
+			var zoomLevel = map.getZoom();
+			var length = d.node.length;
+			var textLength;
+			if(zoomLevel != 0)
+				textLength = (length) * 3 * zoomLevel;
+			else{
+				textLength = (length) * 3;
+			}
+			
+			var flag;
+			flag = (getLinkStroke(d,"linecolor") == "gray");
+			flag = (filter_by_entity("Location")&&filter_by_entity(d.targetType)&&!flag&&(Number(d.pathLength) > textLength));
+			return flag?"inline":"none";
+		});
+
 		uniqueLocationArray = [];		
 	}
 	
-	 function mapFilter(){
-		 feature.style("display", function(d) {
+	function mapFilter(){
+		feature.style("display", function(d) {
 			var flag  = filter_by_entity("Location")&&filter_by_entity(d.targetType);
-		    return flag?"inline":"none";
-		 });
+			return flag?"inline":"none";
+		});
 		 
-		 line.style("display", function(d) {
-				var flag;
-				flag = (getLinkStroke(d,"linecolor") == "gray");
-				flag = filter_by_entity("Location")&&filter_by_entity(d.targetType)&&!flag;
-			    return flag?"inline":"none";
-		 });
-		 textPath.style("display", function(d) {
-			 	var zoomLevel = map.getZoom();
-				var length = d.node.length;
-				var textLength;
-				if(zoomLevel != 0)
-					textLength = (length) * 3 * zoomLevel;
-				else{
-					textLength = (length) * 3;
-				}
-				
-				var flag;
-				flag = (getLinkStroke(d,"linecolor") == "gray");
-				flag = (filter_by_entity("Location")&&filter_by_entity(d.targetType)&&!flag&&(Number(d.pathLength) > textLength));
-			    return flag?"inline":"none";
-		 });
-	 } 
-	 drawMap.mapFilter = mapFilter;	  	
+		line.style("display", function(d) {
+			var flag;
+			flag = (getLinkStroke(d,"linecolor") == "gray");
+			flag = filter_by_entity("Location")&&filter_by_entity(d.targetType)&&!flag;
+			return flag?"inline":"none";
+		});
+
+		textPath.style("display", function(d) {
+			var zoomLevel = map.getZoom();
+			var length = d.node.length;
+			var textLength;
+			if(zoomLevel != 0)
+				textLength = (length) * 3 * zoomLevel;
+			else{
+				textLength = (length) * 3;
+			}
+			
+			var flag;
+			flag = (getLinkStroke(d,"linecolor") == "gray");
+			flag = (filter_by_entity("Location")&&filter_by_entity(d.targetType)&&!flag&&(Number(d.pathLength) > textLength));
+			return flag?"inline":"none";
+		});
+	} 
+
+	drawMap.mapFilter = mapFilter;	  	
 }

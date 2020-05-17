@@ -1,3 +1,8 @@
+/* 
+	*Author: Santhosh Nandhakumar
+	*emailid: nsanthosh2409@gmail.com
+*/
+
 function drawEditViewTable(rows){
 	d3.select("#editView").remove();
 	d3.select("#editViewContainer").insert("div").attr("id","editView").attr("class","edit-place");
